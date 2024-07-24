@@ -1,11 +1,9 @@
 <template>
-    <div class="d-flex" id="wrapper">
-      <!-- Sidebar -->
+    <div class="wrapper sticky-sm-top">
       <div class="bg-dark border-right sidebar-con d-flex flex-column" id="sidebar-wrapper">
-        <div class="sidebar-heading sidebar-title">마켓</div>
+        <div class="sidebar-heading sidebar-title">Market</div>
         <div class="list-group list-group-flush">
           <div class="sidebar-heading">
-            <div class="sidebar-title d-flex">카테고리</div>
             <a href="#" class="list-group-item list-group-item-action bg-dark pl-4 sidebar-text">가죽공예</a>
             <a href="#" class="list-group-item list-group-item-action bg-dark pl-4 sidebar-text">목공예</a>
             <a href="#" class="list-group-item list-group-item-action bg-dark pl-4 sidebar-text">도자기공예</a>
@@ -14,16 +12,27 @@
             <a href="#" class="list-group-item list-group-item-action bg-dark pl-4 sidebar-text">More</a>
           </div>
           <div class="sidebar-heading">
-            <div class="sidebar-title d-flex">추천상품</div>
-            <a href="#" class="list-group-item list-group-item-action bg-dark pl-4 sidebar-text">
-                <img src="/src/assets/image/img1.png" class="sidebar-img" />
-            </a>
-            <a href="#" class="list-group-item list-group-item-action bg-dark pl-4 sidebar-text">
-                <img src="/src/assets/image/img1.png" class="sidebar-img" />
-            </a>
-            <a href="#" class="list-group-item list-group-item-action bg-dark pl-4 sidebar-text">
-                <img src="/src/assets/image/img1.png" class="sidebar-img" />
-            </a>
+            <div class="d-flex position-relative mb-1">
+                <img src="/src/assets/image/img1.png" class="flex-shrink-0 me-3" alt="추천상품1">
+                <div>
+                    <div class="mt-0 title-link">상품제목</div>
+                    <a href="#" class="stretched-link title-link2">상세보기</a>
+                </div>
+            </div>
+            <div class="d-flex position-relative mb-1">
+                <img src="/src/assets/image/img1.png" class="flex-shrink-0 me-3" alt="추천상품2">
+                <div>
+                    <div class="mt-0 title-link">상품제목2</div>
+                    <a href="#" class="stretched-link title-link2">상세보기</a>
+                </div>
+            </div>
+            <div class="d-flex position-relative mb-3">
+                <img src="/src/assets/image/img1.png" class="flex-shrink-0 me-3" alt="추천상품3">
+                <div>
+                    <div class="mt-0 title-link">상품제목3</div>
+                    <a href="#" class="stretched-link title-link2">상세보기</a>
+                </div>
+            </div>
           </div>
         </div>
       </div>
@@ -37,21 +46,23 @@
   </script>
   
   <style scoped>
-  #wrapper {
-    height: 800px;
+  .wrapper {
+    height: 100%;
   }
   
   #sidebar-wrapper {
-    width: 300px;
+    width: 250px;
   }
   
   .sidebar-con {
+    width: 250px;
+
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    border-top-right-radius: 8px; /* 좌상단 곡률 */
-    border-bottom-right-radius: 8px; /* 좌하단 곡률 */
+    border-top-right-radius: 10px; /* 좌상단 곡률 */
+    border-bottom-right-radius: 10px; /* 좌하단 곡률 */
   }
   
   .sidebar-heading {
@@ -60,41 +71,54 @@
     color: white;
   }
   
-  .sidebar-title {
-    margin-top: 1rem;
-    font-size: 1.2rem;
-    color: white;
-  }
-  
-  .sidebar-text {
-    color: white;
-    width: 100%;
-    text-align: left;
-  }
-  
   .sidebar-img {
     width: auto;
     height: 50px;
   }
-  .sidebar-title{
+  
+  .sidebar-title {
+    font-family: "LINESeedKR-Bd";
+    font-size: 28px;
+    color: #FD8E4C;
+  }
+  
+  .sidebar-subtitle {
     font-family: "LINESeedKR-Bd";
     font-size: 21px;
-    color: #FD8E4C;
-    margin-left: 10px;
+    color: #FFFFFF;
+    margin-top: 10px;
+    margin-bottom: 10px;
   }
-  .sidebar-text{
+  
+  .sidebar-text {
     font-family: "LINESeedKR-Bd";
     font-size: 16px;
+    color: #FFFFFF;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    text-align: center;
+  }
+  .title-link{
+    font-family: "LINESeedKR-Bd";
+    font-size: 14px;
+    color: #FFFFFF;
+  }
+  .title-link2{
+    font-family: "LINESeedKR-Bd";
+    font-size: 10px;
     color: #FFFFFF;
   }
   
   .list-group-item {
     border: none !important;
   }
-
-  @media (min-width: 768px) {
+  
+  @media (max-width: 992px) {
     #sidebar-wrapper {
       margin-left: 0;
+    }
+    .wrapper{
+        display: none !important;
     }
   }
   </style>

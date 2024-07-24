@@ -111,7 +111,7 @@ export default {
   font-family: "PuradakGentleGothicR";
   color: #febe98;
   font-size: 36px;
-  margin-bottom: 10px;
+  margin: 0.5rem 0;
 }
 
 .text-uppercase {

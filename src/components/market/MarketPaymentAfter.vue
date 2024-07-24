@@ -39,7 +39,7 @@
   }
   
   .message-box h1 {
-    color: #28a745; /* 텍스트 색상 설정 */
+    color: #FEBE98; /* 텍스트 색상 설정 */
     font-size: 24px; /* 폰트 크기 설정 */
     margin: 0; /* 기본 마진 제거 */
     text-align: center; /* 텍스트 중앙 정렬 */
@@ -54,7 +54,7 @@
   }
   
   .btn-bid {
-    background-color: peachpuff; /* 버튼 배경색을 peach로 설정 */
+    background-color: FEBE98; /* 버튼 배경색을 peach로 설정 */
     border: none; /* 기본 테두리 제거 */
     color: #000; /* 텍스트 색상 설정 */
     padding: 10px 20px; /* 버튼 내부 여백 설정 */
@@ -65,7 +65,7 @@
   }
   
   .btn-bid:hover {
-    background-color: #f5c6aa; /* 호버 시 배경색 변경 */
+    background-color:FEBE98; /* 호버 시 배경색 변경 */
   }
   </style>
   

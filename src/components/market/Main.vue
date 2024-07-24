@@ -120,9 +120,6 @@
   </script>
   
   <style scoped>
-  .mt-95 {
-    margin-top: 95px;
-  }
   .pt-md-10 {
     padding-top: 10rem;
   }

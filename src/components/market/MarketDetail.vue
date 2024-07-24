@@ -284,7 +284,7 @@ export default {
   margin: 0;
 }
 .btn-primary {
-  background-color: peachpuff; /* Peach color for the button */
+  background-color: FEBE98; /* Peach color for the button */
   border: none; /* Remove default border */
   color: #000; /* Text color for better contrast */
   margin-right: 10px;
@@ -292,7 +292,7 @@ export default {
   transition: background-color 0.2s;
 }
 .btn-primary:hover {
-  background-color: #f5c6aa; /* Slightly darker peach on hover */
+  background-color: #FEBE98; /* Slightly darker peach on hover */
 }
 .btn-outline-light {
   border-color: #e9ecef;
@@ -307,7 +307,7 @@ export default {
   cursor: pointer; /* Change cursor to pointer */
 }
 .bi-heart {
-  fill: #e83e8c; /* Heart icon color */
+  fill: #FEBE98; /* Heart icon color */
 }
 .like-button svg {
   width: 24px;
