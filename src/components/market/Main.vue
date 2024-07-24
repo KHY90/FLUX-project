@@ -1,7 +1,5 @@
 <template>
-         <!-- Header 컴포넌트 -->
-      <Header />
-    
+     
       <!-- Main content -->
       <div class="mt-95 pt-md-10 border-top">
         <div class="container">

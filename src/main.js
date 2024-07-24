@@ -1,5 +1,6 @@
 import './assets/css/font.css'
 import './assets/css/reset.css'
+import './assets/css/scrollbar.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 
