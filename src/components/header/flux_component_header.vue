@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">FLUX</a>
+      <router-link class="navbar-brand" to="/">FLUX</router-link>
       <div class="d-flex align-items-center ms-auto mr-20">
         <div
           v-if="isLoggedIn"
@@ -47,19 +47,19 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link" href="#">Home</a>
+            <router-link class="nav-link" to="/">Home</router-link>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Market</a>
+            <router-link class="nav-link" to="/market">Market</router-link>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Article</a>
+            <router-link class="nav-link" to="/article">Article</router-link>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Ranking</a>
+            <router-link class="nav-link" to="/ranking">Ranking</router-link>
           </li>
           <li class="nav-item">
-            <a class="nav-link point-link" href="#">Sale</a>
+            <router-link class="nav-link" to="/mypage">Mypage</router-link>
           </li>
           <li class="nav-item">
             <form class="d-flex ms-2 search-form" role="search">
