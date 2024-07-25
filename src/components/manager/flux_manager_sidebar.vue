@@ -4,13 +4,13 @@
         <div class="sidebar-heading sidebar-title">DashBoard</div>
         <div class="list-group list-group-flush">
           <div class="sidebar-heading">
-            <a href="#" class="list-group-item list-group-item-action pl-4 sidebar-text">홈화면</a>
+            <router-link class="list-group-item list-group-item-action pl-4 sidebar-text" to="/manager">홈화면</router-link>
             <hr>
             <a href="#" class="list-group-item list-group-item-action pl-4 sidebar-text">회원목록</a>
             <a href="#" class="list-group-item list-group-item-action pl-4 sidebar-text">회원권한설정</a>
             <hr>
-            <a href="#" class="list-group-item list-group-item-action pl-4 sidebar-text">아티클목록</a>
-            <a href="#" class="list-group-item list-group-item-action pl-4 sidebar-text">아티클등록</a>
+            <router-link class="list-group-item list-group-item-action pl-4 sidebar-text" to="/manager/article/articlelist">아티클목록</router-link>
+            <router-link class="list-group-item list-group-item-action pl-4 sidebar-text" to="/manager/article/articlepost">아티클등록</router-link>
             <hr>
             <a href="#" class="list-group-item list-group-item-action pl-4 sidebar-text">공지목록</a>
             <a href="#" class="list-group-item list-group-item-action pl-4 sidebar-text">공지등록</a>

@@ -1,14 +1,14 @@
 <template>
     <div class="articlelist">
         <div class="article_list">
-            <h3><p>아티클 관리</p></h3>
+            <h3>아티클 관리</h3>
 
             <div class="button-container">
                 <button class="btn" @click="addNewArticle">새 글</button>
                 <!-- 조회 기능 추가 -->
                 <div class="search">
                     <input type="text" placeholder="검색어를 입력하세요" v-model="searchQuery" />
-                    <button class="btn" @click="searchArticles">조회</button>
+                    <button class="btn search-btn" @click="searchArticles">조회</button>
                 </div>
             </div>
         </div>
@@ -115,7 +115,7 @@ body {
 .articlelist {
     width: 80%;
     margin: 20px auto;
-    background-color: #FEBE98;
+    background-color: #fffefd;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
@@ -127,7 +127,7 @@ body {
     align-items: center;
 }
 
-h3 p {
+h3 {
     margin: 0;
     font-size: 24px;
     font-weight: bold;
@@ -139,7 +139,7 @@ h3 p {
 }
 
 .btn {
-    background-color: #FEBE98;
+    background-color: #1244AF;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -147,10 +147,17 @@ h3 p {
     cursor: pointer;
     font-size: 16px;
     margin-left: 10px;
+    height: 40px; /* 버튼 높이 지정 */
+    line-height: 20px; /* 버튼 안의 텍스트 높이 조정 */
+}
+
+.search-btn {
+    width: 80px;
+    height: 40px; /* 조회 버튼 높이 지정 */
 }
 
 .btn:hover {
-    background-color: #FDA65D;
+    background-color: #1244AF;
 }
 
 .search input {
@@ -158,15 +165,32 @@ h3 p {
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 16px;
+    height: 40px; /* 입력창 높이 지정 */
+    line-height: 20px; /* 입력창 안의 텍스트 높이 조정 */
 }
 
 .search button {
     margin-left: 10px;
+    background-color: #1244AF;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    height: 40px; /* 버튼 높이 지정 */
+    line-height: 20px; /* 버튼 안의 텍스트 높이 조정 */
+}
+
+.search button:hover {
+    background-color: #1244AF;
 }
 
 .search {
     display: flex;
     align-items: center;
+    margin-left: 20px;
+    height: 40px; /* 검색 영역 전체 높이 지정 */
 }
 
 .list-section {
@@ -176,7 +200,7 @@ h3 p {
 .list-header {
     display: flex;
     justify-content: space-between;
-    background-color: #FDA65D;
+    background-color: #1244AF;
     padding: 10px;
     border-radius: 5px;
     font-weight: bold;
@@ -185,6 +209,7 @@ h3 p {
 .header-item {
     flex: 1;
     text-align: center;
+    color: white;
 }
 
 .list-items {
@@ -219,13 +244,13 @@ h3 p {
 }
 
 .pagination .page-link:hover {
-    background-color: #FDA65D;
+    background-color: #1244AF;
     color: white;
 }
 
 .pagination .active .page-link {
-    background-color: #FDA65D;
-    border-color: #FDA65D;
+    background-color: #1244AF;
+    border-color: #1244AF;
     color: white;
 }
 
@@ -237,4 +262,6 @@ h3 p {
 .clickable:hover {
     text-decoration: underline;
 }
+
+
 </style>

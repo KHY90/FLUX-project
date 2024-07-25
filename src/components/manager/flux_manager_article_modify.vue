@@ -50,6 +50,7 @@
 
 <script>
 export default {
+    name: 'ManagerArticleModify',
     methods: {
         handleImageUpload(event) {
             const input = event.target;
@@ -69,6 +70,7 @@ export default {
         document.getElementById('image-upload').addEventListener('change', this.handleImageUpload);
         document.getElementById('upload-image-preview').addEventListener('click', this.triggerFileUpload);
     }
+
 }
 </script>
 

@@ -4,23 +4,20 @@
         <div class="article-container">
             <div class="top">
                 <div class="category">
-                    <h3> Interview</h3>
+                    <h3> {{ article.category }} </h3>
                 </div>
                 <div class="subject">
-                    <h1> 제목 </h1>
+                    <h1> {{ article.title }} </h1>
                 </div>
             </div>
             <div class="card-container">
                 <div class="card">
-                    <img src="https://www.learningman.co/static/2491830007c24cf2555bc0333ead8fbf/a2510/interview.jpg"
+                    <img :src="article.imageUrl"
                         class="card-img-top" alt="예시">
                     <div class="card-body">
                         <p class="card-text">
-                            동화같은 숲 속 세상을 그리는 김지연 작가 <br>
-                            2024.06.12<br>
-                            유년시절 기억 속 자연은 신비로운 놀이터였다는 김지연 작가.<br>
-                            모두의 동심을 불러일으키는 토끼가 뛰노는 오묘한 숲 속,<br>
-                            가장 보통의 순간에서 발견할 수 있는 아름다움의 가치를 작품 속에서 찾아보세요.
+                            {{ article.content }} <br>
+                            {{ article.date }}<br>
                         </p>
                     </div>
                 </div>
@@ -38,9 +35,34 @@
 </template>
 
 <script>
+import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+
 export default {
-    
-}
+    name: 'ManagerArticleView',
+    setup() {
+        const route = useRoute();
+        const articleId = ref(route.query.id);
+        const article = ref({
+            category: 'Interview',
+            title: '제목',
+            imageUrl: 'https://www.learningman.co/static/2491830007c24cf2555bc0333ead8fbf/a2510/interview.jpg',
+            content: '동화같은 숲 속 세상을 그리는 김지연 작가 유년시절 기억 속 자연은 신비로운 놀이터였다는 김지연 작가. 모두의 동심을 불러일으키는 토끼가 뛰노는 오묘한 숲 속, 가장 보통의 순간에서 발견할 수 있는 아름다움의 가치를 작품 속에서 찾아보세요.',
+            date: '2024.06.12'
+        });
+
+        onMounted(() => {
+            // articleId.value를 이용해 서버나 store에서 해당 아티클의 상세 정보를 가져옵니다.
+            // 예시를 위해 하드코딩된 데이터를 사용합니다.
+            // 실제 구현에서는 API 호출 등을 통해 데이터를 가져와야 합니다.
+        });
+
+        return {
+            articleId,
+            article
+        };
+    }
+};
 </script>
 
 <style>
