@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { useMarketStore, useArticleStore, useSalesStore, useMypageStore, useManager, useManagerUser, useManagerNotice } from '@/stores/rootstore.js';
+
 
 const Main = () => import("../views/main.vue");
 const Market = () => import("../views/market.vue");
@@ -10,6 +12,10 @@ const Article = () => import("../views/article.vue");
 const ArticleMain = () => import("../components/article/flux_article_main.vue");
 const ArticleDetail = () => import("../components/article/flux_article_detaile.vue");
 const Ranking = () => import("../views/ranking.vue");
+const Sales = () => import("../views/sales.vue");
+const Registry = () => import("../components/market/flux_market_registration.vue");
+const RegistryInfo = () => import("../components/market/flux_market_registration_info.vue");
+const RegistryEdit = () => import("../components/market/flux_market_registration_edit.vue");
 const Mypage = () => import("../views/mypage.vue");
 const MypageWishList = () => import("../components/mypage/flux_mypage_wish.vue");
 const MypageActivity = () => import("../components/mypage/flux_mypage_activity.vue");
@@ -22,11 +28,14 @@ const ManagerArticleUserList = () => import("../components/manager/flux_manager_
 const ManagerArticlePost = () => import("../components/manager/flux_manager_article_post.vue");
 const ManagerArticleModify = () => import("../components/manager/flux_manager_article_modify.vue");
 const ManagerArticleView = () => import("../components/manager/flux_manager_article_managerview.vue");
+const ManagerUserMain = () => import("../views/manager_user.vue");
+const ManagerUserList= () => import("../components/manager/flux_manager_userlist.vue");
+const ManagerAdminList =() => import("../components/manager/flux_manager_adminlist.vue");
+
 const ManagerNoticeSection = () => import("../views/manager_notice.vue")
 const ManagerNoticeList = () => import("../components/manager/flux_manager_notice_list.vue");
 const ManagerNoticeEdit = () => import("../components/manager/flux_manager_notice_edit.vue");
 const ManagerNoticeModify = () => import("../components/manager/flux_manager_notice_modify.vue");
-
 
 
 const routes = [
@@ -52,10 +61,16 @@ const routes = [
     ],
   },
   { path: "/ranking", component: Ranking },
+  { path: "/sales", component: Sales,
+    children: [
+      {path: "registry" ,component: Registry},
+      {path: "registryinfo", component: RegistryInfo},
+      {path: "registryedit", component: RegistryEdit},
+    ]
+  },
   {
     path: "/mypage",
     component: Mypage,
-    redirect: "/mypage/wishlist",
     children: [
       { path: "wishlist", component: MypageWishList },
       { path: "activity", component: MypageActivity },
@@ -67,7 +82,6 @@ const routes = [
   {
     path: "/manager/article",
     component: ManagerArticleMain,
-    redirect: "/manager/article/articlelist",
     children: [
       { path: "articlelist", component: ManagerArticleUserList },
       { path: "articleview", component: ManagerArticleView },
@@ -76,20 +90,54 @@ const routes = [
     ] ,
   },
   {
+    path: "/manager/admin",
+    component: ManagerUserMain,
+    children: [
+      { path: "userlist", component: ManagerUserList },
+      { path: "adminlist", component: ManagerAdminList },
+    ] ,
+  },
+  {
     path: "/manager/notice",
     component: ManagerNoticeSection,
-    redirect: "/manager/notice/noticelist",
     children: [
       { path: "noticelist", component: ManagerNoticeList },
-      { path: "noticeedit", component: ManagerNoticeEdit },
+      { path: "noticepost", component: ManagerNoticeEdit },
       { path: "noticemodify", component: ManagerNoticeModify }
     ] ,
   },
-];
+]
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 });
+
+function resetStores() {
+  const marketStore = useMarketStore();
+  const articleStore = useArticleStore();
+  const salesStore = useSalesStore();
+  const mypageStore = useMypageStore();
+  const managerStore = useManager();
+  const managerUser = useManagerUser();
+  const managerNotice = useManagerNotice();
+
+
+  marketStore.setRoot('main');
+  articleStore.setRoot('main');
+  salesStore.setRoot('registry');
+  mypageStore.setRoot('wishlist');
+  managerStore.setRoot('main');
+  managerUser.setRoot('userlist');
+  managerNotice.setRoot('noticelist');
+}
+
+router.beforeEach((to, from, next) => {
+  if (to.path === '/login' || to.path === '/') {
+    resetStores();
+  }
+  next();
+});
+
 
 export default router;

@@ -10,23 +10,15 @@
                         <th scope="col">공지 코드</th>
                         <th scope="col">제목</th>
                         <th scope="col">작성 날짜</th>
+                        <th scope="col">수정</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td>Larry the Bird</td>
-                        <td>@twitter</td>
+                    <tr v-for="notice in notices" :key="notice.code">
+                        <th scope="row">{{ notice.code }}</th>
+                        <td>{{ notice.title }}</td>
+                        <td>{{ notice.date }}</td>
+                        <td @click="goToModify(notice.code)" class="modify-cell">수정 이미지</td>
                     </tr>
                 </tbody>
             </table>
@@ -53,7 +45,20 @@
 
 <script>
 export default {
-    
+    data() {
+        return {
+            notices: [
+                { code: 1, title: 'Mark', date: 'Otto' },
+                { code: 2, title: 'Jacob', date: 'Thornton' },
+                { code: 3, title: 'Larry the Bird', date: '@twitter' }
+            ]
+        }
+    },
+    methods: {
+        goToModify(code) {
+            this.$router.push(`/manager/notice/noticemodify`);
+        }
+    }
 }
 </script>
 
@@ -88,6 +93,16 @@ export default {
 .table {
     width: 100%;
     margin-bottom: 20px;
+}
+
+.modify-cell {
+    cursor: pointer;
+    color: blue; /* 클릭 가능한 느낌을 주기 위해 색상 변경 */
+    text-decoration: underline; /* 클릭 가능한 느낌을 주기 위해 밑줄 추가 */
+}
+
+.modify-cell:hover {
+    color: darkblue; /* 호버 시 색상 변경 */
 }
 
 .pagination-container {

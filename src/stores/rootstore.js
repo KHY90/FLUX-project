@@ -23,6 +23,17 @@ export const useArticleStore = defineStore("useArticleStore", {
   },
 });
 
+export const useSalesStore = defineStore("useSalesStore", {
+  state: () => ({
+    root: "registry", // 초기값 설정
+  }),
+  actions: {
+    setRoot(option) {
+      this.root = option;
+    },
+  },
+});
+
 export const useMypageStore = defineStore("useMypageStore", {
   state: () => ({
     root: "wishlist", // 초기값 설정
@@ -34,7 +45,7 @@ export const useMypageStore = defineStore("useMypageStore", {
   },
 });
 
-export const useManager = defineStore("useManager", {
+export const useManager= defineStore("useManager", {
   state: () => ({
     root: "main",
   }),
@@ -56,13 +67,26 @@ export const useManagerArticle = defineStore("useManagerArticle", {
   }
 });
 
-export const useManagerNotice = defineStore("useManagerNotice", {
+
+export const useManagerUser = defineStore("useManagerUser", {
   state: () => ({
-    root: "noticelist", // 초기값 설정
+    root: "userlist", // 초기값 설정
+
   }),
   actions: {
     setRoot(option) {
       this.root = option;
     }
   }
+});
+export const useManagerNotice = defineStore("useManagerNotice", {
+  state: () => ({
+    root: "noticelist", 
+    }),
+  actions: {
+    setRoot(option) {
+      this.root = option;
+    }
+  }
+
 });

@@ -3,25 +3,22 @@
   <div class="mt-95 pt-md-4 border-top">
     <div class="container">
       <div class="row">
-        <!-- Example post -->
+        <!-- Adjust the number of columns to fit 3 images per row -->
         <div class="col-12 col-sm-4 mb-4" v-for="post in posts" :key="post.id">
-          <div
-            class="hover-card overflow-hidden lh-10 rounded-md position-relative"
-          >
+          <div class="hover-card overflow-hidden lh-10 rounded-md position-relative">
             <a :href="post.link" class="text-decoration-none">
               <img
                 :src="post.coverImg"
                 :alt="post.title"
                 class="zoom-in img-fluid"
-                style="height: 300px; object-fit: cover"
+                style="height: 300px; object-fit: cover; width: 100%;"
+                @click.prevent="goToDetail(post.id)"
               />
             </a>
           </div>
           <div class="mt-3">
             <h5 class="font-weight-bold text-dark">
-              <a :href="post.link" class="text-decoration-none text-dark">{{
-                post.title
-              }}</a>
+              <a :href="post.link" class="text-decoration-none text-dark">{{ post.title }}</a>
             </h5>
             <p class="text-muted">{{ post.category }}</p>
           </div>
@@ -38,7 +35,9 @@
               <li class="page-item"><a class="page-link" href="#">1</a></li>
               <li class="page-item"><a class="page-link" href="#">2</a></li>
               <li class="page-item"><a class="page-link" href="#">3</a></li>
-              <li class="page-item"><a class="page-link" href="#">Next</a></li>
+              <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+              </li>
             </ul>
           </nav>
         </div>
@@ -119,12 +118,17 @@ export default {
       ],
     };
   },
+  methods: {
+    goToDetail(id) {
+      this.$router.push({ path: '/detail', query: { id: id } });
+    },
+  },
 };
 </script>
 
 <style scoped>
-.pt-md-10 {
-  padding-top: 10rem;
+.pt-md-4 {
+  padding-top: 4rem;
 }
 .border-top {
   border-top: 1px solid #dee2e6;

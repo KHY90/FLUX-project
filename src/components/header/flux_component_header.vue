@@ -3,45 +3,12 @@
     <div class="container-fluid">
       <router-link class="navbar-brand" to="/">FLUX</router-link>
       <div class="d-flex align-items-center ms-auto mr-20">
-        <div
-          v-if="isLoggedIn"
-          class="nav-item dropdown d-flex align-items-center"
-        >
-          <a
-            class="nav-link dropdown-toggle"
-            href="#"
-            role="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            <img
-              src="/src/assets/image/fluxthumbnail.png"
-              alt="Profile"
-              class="img-thumbnail profile-icon"
-            />
-          </a>
-          <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" href="#">위시리스트</a></li>
-            <li><a class="dropdown-item" href="#">활동내역</a></li>
-            <li><hr class="dropdown-divider" /></li>
-            <li><a class="dropdown-item" href="#">내정보수정</a></li>
-            <li><a class="dropdown-item" href="#">계정관리</a></li>
-            <li><a class="dropdown-item" href="#">로그아웃</a></li>
-          </ul>
-        </div>
-        <div v-else class="nav-item ms-3">
-          <a class="nav-link point-link" href="#" @click="login">Login</a>
+        <div class="nav-item ms-3">
+          <router-link to="/login" class="nav-link point-link">Login</router-link>
         </div>
       </div>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" 
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -57,6 +24,9 @@
           </li>
           <li class="nav-item">
             <router-link class="nav-link" to="/ranking">Ranking</router-link>
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link point-link" to="/sales">Sales</router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link" to="/mypage">Mypage</router-link>

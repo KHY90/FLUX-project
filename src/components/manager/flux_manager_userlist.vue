@@ -1,240 +1,169 @@
 <template>
-    <div class="articlelist">
-        <div class="article_list">
-            <h3><p>아티클 관리</p></h3>
-
-            <div class="button-container">
-                <button class="btn" @click="addNewArticle">새 글</button>
-                <!-- 조회 기능 추가 -->
-                <div class="search">
-                    <input type="text" placeholder="검색어를 입력하세요" v-model="searchQuery" />
-                    <button class="btn" @click="searchArticles">조회</button>
-                </div>
-            </div>
+    <div class="container mt-5">
+      <div class="header-container mb-4">
+        <h1 class="title">회원 목록</h1>
+        <div class="filter-container">
+          <div class="btn-group">
+            <button @click="filterRole(null)" :class="{'active': selectedRole === null}" class="btn">전체</button>
+            <button @click="filterRole('회원')" :class="{'active': selectedRole === '회원'}" class="btn">회원</button>
+            <button @click="filterRole('관리자')" :class="{'active': selectedRole === '관리자'}" class="btn">관리자</button>
+          </div>
         </div>
-        <!-- 리스트 섹션 -->
-        <div class="list-section">
-            <div class="list-header">
-                <span class="header-item">카테고리</span>
-                <span class="header-item">작가 이름</span>
-                <span class="header-item">이미지</span>
-            </div>
-            <div class="list-items">
-                <div class="list-item" v-for="(article, index) in paginatedArticles" :key="index">
-                    <span class="item">{{ article.category }}</span>
-                    <span class="item clickable" @click="goToDetail(article.id)">{{ article.author }}</span>
-                    <img :src="article.img" alt="Article Image" class="item-img">
-                </div>
-            </div>
-            <!-- 페이지네이션 -->
-            <nav aria-label="Page navigation" class="pagination-container">
-                <ul class="pagination">
-                    <li class="page-item" :class="{ disabled: currentPage === 1 }">
-                        <a class="page-link" href="#" @click.prevent="prevPage">&laquo;</a>
-                    </li>
-                    <li class="page-item" v-for="page in totalPages" :key="page" :class="{ active: currentPage === page }">
-                        <a class="page-link" href="#" @click.prevent="goToPage(page)">{{ page }}</a>
-                    </li>
-                    <li class="page-item" :class="{ disabled: currentPage === totalPages }">
-                        <a class="page-link" href="#" @click.prevent="nextPage">&raquo;</a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
+      </div>
+      <div class="table-container">
+        <table class="table table-striped table-bordered">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">순번</th>
+              <th scope="col">회원 종류</th>
+              <th scope="col">아이디</th>
+              <th scope="col">이메일</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(user, index) in filteredUsers" :key="user.id">
+              <td>{{ index + 1 }}</td>
+              <td>{{ user.role }}</td>
+              <td>{{ user.username }}</td>
+              <td>{{ user.email }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
-</template>
-
+  </template>
+  
 <script>
-import { useRouter } from 'vue-router';
-
 export default {
-    name: 'articlelist',
-    data() {
-        return {
-            searchQuery: '',
-            articles: [
-                { id: 1, category: '카테고리1', author: '작가1', img: 'https://via.placeholder.com/150' },
-                { id: 2, category: '카테고리2', author: '작가2', img: 'https://via.placeholder.com/150' },
-                { id: 3, category: '카테고리3', author: '작가3', img: 'https://via.placeholder.com/150' },
-                { id: 4, category: '카테고리4', author: '작가4', img: 'https://via.placeholder.com/150' },
-                { id: 5, category: '카테고리5', author: '작가5', img: 'https://via.placeholder.com/150' },
-                { id: 6, category: '카테고리6', author: '작가6', img: 'https://via.placeholder.com/150' },
-                { id: 7, category: '카테고리7', author: '작가7', img: 'https://via.placeholder.com/150' },
-            ],
-            currentPage: 1,
-            pageSize: 5,
-        };
-    },
-    computed: {
-        totalPages() {
-            return Math.ceil(this.articles.length / this.pageSize);
-        },
-        paginatedArticles() {
-            const start = (this.currentPage - 1) * this.pageSize;
-            const end = start + this.pageSize;
-            return this.articles.slice(start, end);
-        }
-    },
-    methods: {
-        searchArticles() {
-            console.log('Searching for:', this.searchQuery);
-            // 검색 로직을 여기에 추가할 수 있습니다.
-        },
-        addNewArticle() {
-            // 새 글 추가 로직을 여기에 추가할 수 있습니다.
-            alert('새 글 추가 기능');
-        },
-        prevPage() {
-            if (this.currentPage > 1) {
-                this.currentPage--;
-            }
-        },
-        nextPage() {
-            if (this.currentPage < this.totalPages) {
-                this.currentPage++;
-            }
-        },
-        goToPage(page) {
-            this.currentPage = page;
-        },
-        goToDetail(id) {
-            this.$router.push({ path: '/manager/article/articleview', query: { id: id } });
-        }
+  name: 'MemberList',
+  data() {
+    return {
+      users: [
+        { id: 1, role: '회원', username: 'user1', email: 'user1@example.com' },
+        { id: 2, role: '관리자', username: 'admin1', email: 'admin1@example.com' },
+        { id: 3, role: '회원', username: 'user2', email: 'user2@example.com' },
+        { id: 4, role: '회원', username: 'user3', email: 'user3@example.com' },
+        { id: 5, role: '관리자', username: 'admin2', email: 'admin2@example.com' },
+        { id: 6, role: '회원', username: 'user4', email: 'user4@example.com' },
+        { id: 7, role: '회원', username: 'user5', email: 'user5@example.com' },
+        { id: 8, role: '관리자', username: 'admin3', email: 'admin3@example.com' }
+      ],
+      selectedRole: null // 필터링할 역할을 저장
     }
-};
+  },
+  computed: {
+    filteredUsers() {
+      if (this.selectedRole === null) {
+        return this.users;
+      }
+      return this.users.filter(user => user.role === this.selectedRole);
+    }
+  },
+  methods: {
+    filterRole(role) {
+      this.selectedRole = role;
+    }
+  }
+}
 </script>
-
 <style scoped>
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #FEBE98;
+    background-color: #F0F2F5; /* 부드러운 배경색 */
 }
 
-.articlelist {
+.container {
     width: 80%;
     margin: 20px auto;
-    background-color: #FEBE98;
+    background-color: #ffffff;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
+    border: 1px solid #ddd; /* 컨테이너 테두리 추가 */
 }
 
-.article_list {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-h3 p {
-    margin: 0;
-    font-size: 24px;
-    font-weight: bold;
-}
-
-.button-container {
+.header-container {
     display: flex;
     align-items: center;
+    justify-content: space-between; /* 제목과 필터 버튼을 양쪽으로 배치 */
+    margin-bottom: 20px;
+}
+
+.title {
+    font-size: 24px; /* 제목 폰트 크기 조정 */
+    margin: 0; /* 제목 상하 여백 제거 */
+}
+
+.filter-container {
+    display: flex;
+    align-items: center; /* 버튼을 세로로 중앙 정렬 */
+}
+
+.btn-group {
+    display: flex;
+    gap: 10px; /* 버튼 사이의 간격 */
 }
 
 .btn {
-    background-color: #FEBE98;
+    background-color: #1244AF; /* 버튼 배경색 */
     color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
+    padding: 8px 20px; /* 버튼의 padding 조정 */
+    border-radius: 20px; /* 버튼 모서리를 둥글게 */
     cursor: pointer;
-    font-size: 16px;
-    margin-left: 10px;
+    font-size: 14px; /* 버튼 폰트 크기 조정 */
+    line-height: 1.2; /* 버튼 텍스트 높이 조정 */
+    min-width: 100px; /* 버튼의 최소 너비 설정 */
+    text-align: center; /* 텍스트 중앙 정렬 */
 }
 
-.btn:hover {
-    background-color: #FDA65D;
+.btn.active {
+    background-color: #1244AF; /* 활성화된 버튼 배경색 */
 }
 
-.search input {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
+.table-container {
+    max-height: 300px; /* 테이블 높이 제한 */
+    overflow-y: auto; /* 수직 스크롤 추가 */
+    position: relative; /* 헤더 고정을 위해 상대 위치 설정 */
 }
 
-.search button {
-    margin-left: 10px;
+.table {
+    width: 100%;
+    border-collapse: collapse;
 }
 
-.search {
-    display: flex;
-    align-items: center;
+.table th, .table td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #ddd;
 }
 
-.list-section {
-    margin-top: 20px;
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f9f9f9;
 }
 
-.list-header {
-    display: flex;
-    justify-content: space-between;
-    background-color: #FDA65D;
-    padding: 10px;
-    border-radius: 5px;
+.table-bordered {
+    border: 1px solid #ddd;
+}
+
+.thead-dark {
+    position: sticky; /* 헤더 고정을 위한 sticky 속성 */
+    top: 0; /* 테이블 상단에 고정 */
+}
+
+.thead-dark th {
+    background-color: #1244AF; /* 헤더 배경색 */
+    color: white;
     font-weight: bold;
 }
 
-.header-item {
-    flex: 1;
-    text-align: center;
+.form-select {
+    display: none; /* 선택박스 숨김 */
 }
 
-.list-items {
-    margin-top: 10px;
-}
-
-.list-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
-    border-bottom: 1px solid #ccc;
-}
-
-.item {
-    flex: 1;
-    text-align: center;
-}
-
-.item-img {
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-    border-radius: 5px;
-}
-
-.pagination-container {
-    margin-top: 20px;
-}
-
-.pagination .page-link {
-    color: black;
-}
-
-.pagination .page-link:hover {
-    background-color: #FDA65D;
-    color: white;
-}
-
-.pagination .active .page-link {
-    background-color: #FDA65D;
-    border-color: #FDA65D;
-    color: white;
-}
-
-.clickable {
-    cursor: pointer;
-    color: blue;
-}
-
-.clickable:hover {
-    text-decoration: underline;
+.btn-primary {
+    display: none; /* 버튼 숨김 */
 }
 </style>

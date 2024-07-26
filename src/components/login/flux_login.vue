@@ -8,8 +8,7 @@
         <div
           class="col-md-6 login-form d-flex flex-column justify-content-center align-items-center"
         >
-          <div class="login-subtitle mb-3">LOGIN</div>
-          <div class="login-title mb-5">FLUX</div>
+          <div class="login-title mb-5">FLUX | LOGIN</div>
           <div class="login-text">
             FLUX는 시장의 유동성과 역동적인 본질을 담아내며 디지털 상거래의
           </div>
@@ -25,6 +24,17 @@
           </div>
           <a href="" class="mb-3"><img src="/src/assets/image/google.png" /></a>
           <a href="" class="mb-3"><img src="/src/assets/image/kakao.png" /></a>
+          <div class="login-button mt-3">
+              <button type="button" class="btn btn-light">
+                  <router-link to="/" class="no-underline">홈으로</router-link>
+              </button>
+              <button type="button" class="btn btn-light">
+                  <router-link to="/manager" class="no-underline">관리자페이지</router-link>
+              </button>
+          </div>
+          <div class="login-right text-center mt-5">
+            <p class="mb-0">© 2024 FLUX. All rights reserved.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -72,7 +82,7 @@ export default {
   width: 100%;
   max-width: 1200px; /* 최대 너비 설정 */
   display: flex;
-  border-radius: 30px;
+  border-radius: 35px;
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
 }
 
@@ -131,10 +141,12 @@ export default {
 
 .login-title {
   font-family: "PuradakGentleGothicR";
-  color: #febe98;
+  background: linear-gradient(to right, #febe98, #fd8e4c);
+  color: transparent;
+  -webkit-background-clip: text;
   font-size: 46px;
   margin-bottom: 30px;
-  letter-spacing: 10px;
+  letter-spacing: 3px;
 }
 
 .login-subtitle {
@@ -148,9 +160,36 @@ export default {
 .login-text {
   font-family: "LINESeedKR-Bd";
   font-size: 16px;
-  background: linear-gradient(to right top, #febe98, #fd8e4c);
+  background: linear-gradient(to right, #febe98, #fd8e4c);
   color: transparent;
   -webkit-background-clip: text;
   letter-spacing: 1px;
 }
+
+.login-button{
+  display: flex;
+  flex-direction: row;
+}
+
+.login-button {
+  display: flex;
+  gap: 20px; /* 버튼들 사이의 간격 */
+}
+
+.no-underline {
+  text-decoration: none; /* 밑줄 없애기 */
+  font-family: "LINESeedKR-Bd";
+  font-size: 16px;
+  color: #000;
+}
+
+.login-right{
+  font-family: "LINESeedKR-Bd";
+  font-size: 12px;
+  background: linear-gradient(to right, #febe98, #fd8e4c);
+  color: transparent;
+  -webkit-background-clip: text;
+  letter-spacing: 3px;
+}
+
 </style>

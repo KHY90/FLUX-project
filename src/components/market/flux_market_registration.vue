@@ -35,28 +35,29 @@
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      selectedOption: null
-    };
-  },
-  methods: {
-    selectOption(option) {
-      this.selectedOption = option;
-    },
-    goToNextStep() {
-      if (!this.selectedOption) {
+<script setup>
+import { useSalesStore } from "@/stores/rootstore";
+import { computed, ref } from "vue"; // ref를 추가하여 반응형 데이터를 관리
+
+const store = useSalesStore();
+const root = computed(() => store.root); // 상태 값 가져오기
+const setRoot = store.setRoot; // 상태 값 변경 함수
+const selectedOption = ref(null); // 선택된 옵션을 관리하기 위한 반응형 참조 추가
+
+function selectOption(option) {
+    selectedOption.value = option; // 반응형 참조에 값을 할당
+}
+
+function goToNextStep() {
+    if (!selectedOption.value) {
         alert('옵션을 선택하세요.');
         return;
-      }
-      alert(`선택된 옵션: ${this.selectedOption}`);
-      // 다음 단계로 이동하는 로직 추가
     }
-  }
-};
+    alert(`선택된 옵션: ${selectedOption.value}`);
+    setRoot('registryinfo');
+}
 </script>
+
 
 <style scoped>
 .registration {

@@ -36,14 +36,14 @@
         </div>
         <div class="col-md-2 text-left other-content">
           <h5 class="text-uppercase">고객센터 운영 안내</h5>
-          <div class="text-light">운영시간 09:00 ~ 18:00(공휴일 휴무)</div>
-          <div class="text-light">점심시간 평일 13:20~14:20</div>
-          <div class="text-light">
-            1:1 채팅 상담은 FLUX카카오채널에서 운영됩니다.
-          </div>
-          <div class="text-light">1:1 채팅상담</div>
+          <p class="text-light">
+            운영시간 09:00 ~ 18:00(공휴일 휴무)<br>
+            점심시간 평일 13:20~14:20<br>
+            1:1 채팅 상담은 FLUX카카오채널에서 운영됩니다.<br>
+          </p>
+          <button class="chat-button">1:1 채팅상담</button>
         </div>
-        <div class="row mt-3 w-100">
+        <div class="mt-3 w-100">
           <div class="col-12 text-center">
             <p class="mb-0">© 2024 FLUX. All rights reserved.</p>
           </div>
@@ -140,7 +140,19 @@ export default {
   width: 35px; /* 이미지 너비 설정 */
   height: 35px; /* 이미지 높이 설정 */
 }
-
+.chat-button {
+  background-color: yellow; /* 노란색 배경 */
+  color: black; /* 검은색 텍스트 */
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 8px; /* 모서리 둥글게 */
+}
 @media (max-width: 767.98px) {
   .footer .other-content {
     display: none;
