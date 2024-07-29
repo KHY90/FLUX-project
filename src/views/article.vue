@@ -21,6 +21,5 @@ import Section from "@/components/article/flux_article_section.vue";
 .section-align {
   display: flex;
   flex-direction: row;
-  height: 100%;
 }
 </style>

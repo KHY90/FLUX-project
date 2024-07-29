@@ -1,53 +1,46 @@
 <template>
-    <div class="container mt-5">
-      <div class="header-container mb-4">
-        <h1 class="title">회원 목록</h1>
-        <div class="filter-container">
-          <div class="btn-group">
-            <button @click="filterRole(null)" :class="{'active': selectedRole === null}" class="btn">전체</button>
-            <button @click="filterRole('회원')" :class="{'active': selectedRole === '회원'}" class="btn">회원</button>
-            <button @click="filterRole('관리자')" :class="{'active': selectedRole === '관리자'}" class="btn">관리자</button>
-          </div>
+  <div class="container mt-5">
+    <div class="header-container mb-4">
+      <h1 class="title">회원 목록</h1>
+      <div class="filter-container">
+        <div class="btn-group">
+          <button @click="filterRole(null)" :class="{'active': selectedRole === null}" class="btn">전체</button>
+          <button @click="filterRole('USER')" :class="{'active': selectedRole === 'USER'}" class="btn">회원</button>
+          <button @click="filterRole('ADMIN')" :class="{'active': selectedRole === 'ADMIN'}" class="btn">관리자</button>
         </div>
       </div>
-      <div class="table-container">
-        <table class="table table-striped table-bordered">
-          <thead class="thead-dark">
-            <tr>
-              <th scope="col">순번</th>
-              <th scope="col">회원 종류</th>
-              <th scope="col">아이디</th>
-              <th scope="col">이메일</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(user, index) in filteredUsers" :key="user.id">
-              <td>{{ index + 1 }}</td>
-              <td>{{ user.role }}</td>
-              <td>{{ user.username }}</td>
-              <td>{{ user.email }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
     </div>
-  </template>
-  
+    <div class="table-container">
+      <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">순번</th>
+            <th scope="col">회원 종류</th>
+            <th scope="col">아이디</th>
+            <th scope="col">이메일</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(user, index) in filteredUsers" :key="user.user_id">
+            <td>{{ user.user_id }}</td>
+            <td>{{ user.user_role }}</td>
+            <td>{{ user.user_name }}</td>
+            <td>{{ user.user_mail }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</template>
+
 <script>
+import axios from 'axios';
+
 export default {
   name: 'MemberList',
   data() {
     return {
-      users: [
-        { id: 1, role: '회원', username: 'user1', email: 'user1@example.com' },
-        { id: 2, role: '관리자', username: 'admin1', email: 'admin1@example.com' },
-        { id: 3, role: '회원', username: 'user2', email: 'user2@example.com' },
-        { id: 4, role: '회원', username: 'user3', email: 'user3@example.com' },
-        { id: 5, role: '관리자', username: 'admin2', email: 'admin2@example.com' },
-        { id: 6, role: '회원', username: 'user4', email: 'user4@example.com' },
-        { id: 7, role: '회원', username: 'user5', email: 'user5@example.com' },
-        { id: 8, role: '관리자', username: 'admin3', email: 'admin3@example.com' }
-      ],
+      users: [],
       selectedRole: null // 필터링할 역할을 저장
     }
   },
@@ -56,16 +49,29 @@ export default {
       if (this.selectedRole === null) {
         return this.users;
       }
-      return this.users.filter(user => user.role === this.selectedRole);
+      return this.users.filter(user => user.user_role === this.selectedRole);
     }
   },
   methods: {
     filterRole(role) {
       this.selectedRole = role;
+    },
+    fetchUsers() {
+      axios.get('http://localhost:8001/user')
+        .then(response => {
+          this.users = response.data;
+        })
+        .catch(error => {
+          console.error('회원 목록을 가져오는 중 오류가 발생했습니다!', error);
+        });
     }
+  },
+  mounted() {
+    this.fetchUsers();
   }
 }
 </script>
+
 <style scoped>
 body {
     font-family: Arial, sans-serif;

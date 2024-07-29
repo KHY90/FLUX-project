@@ -26,7 +26,7 @@
         <!-- 수정 버튼 -->
         <div class="modibutton">
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <button class="btn btn-primary me-md-2" type="button">수정</button>
+                <router-link class="btn btn-primary me-md-2" to="/manager/article/articlemodify" type="button">수정</router-link>
                 <button class="btn btn-outline-danger" type="button">삭제</button>
             </div>
         </div>

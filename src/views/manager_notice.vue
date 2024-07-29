@@ -11,7 +11,6 @@ import Section from "@/components/manager/flux_manager_notice_section.vue";
     <Sidebar />
     <div class="section">
       <Section />
-      
     </div>
   </div>
   <Footer />
@@ -20,10 +19,10 @@ import Section from "@/components/manager/flux_manager_notice_section.vue";
 <style scoped>
 .section {
   width: 100%;
+  height: 90dvh;
 }
 .section-align {
   display: flex;
   flex-direction: row;
-  height: 100%;
 }
 </style>

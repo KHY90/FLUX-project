@@ -46,3 +46,16 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+
+/* Custom global styles */
+html, body{
+	height: 100dvh;
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+	min-height: 100%;
+	line-height: 1.5;
+	font-family: Arial, sans-serif;
+}

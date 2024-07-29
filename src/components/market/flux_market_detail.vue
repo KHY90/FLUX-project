@@ -2,7 +2,7 @@
   <!-- Main content -->
   <div class="mt-95 pt-md-5 border-top">
     <div class="title text-center">
-      <h1 class="mb-2">{{ post.title }}</h1>
+      <h1 class="mb-2">{{ market.title }}</h1>
     </div>
     <div class="container mt-4">
       <!-- Countdown Timer -->
@@ -23,10 +23,10 @@
 
       <!-- Posts -->
       <div class="row">
-        <div class="col-12 col-md-6 col-lg-4 mb-4" v-for="post in posts" :key="post.id">
+        <div class="col-12 col-md-6 col-lg-4 mb-4" v-for="market in market" :key="market.market_id">
           <div class="hover-card">
-            <a :href="post.link" class="text-decoration-none">
-              <img :src="post.coverImg" class="img-fluid" />
+            <a :href="market_link" class="text-decoration-none">
+              <img :src="market.imgs" class="img-fluid" />
             </a>
           </div>
         </div>
@@ -53,26 +53,32 @@
       </div>
 
       <!-- Information Boxes -->
+
       <div class="row">
-        <!-- Artwork Information Box -->
-        <div class="col-12 col-md-6 mb-4">
-          <div class="info-box">
-            <h4>작품 정보</h4>
-            <p>{{ post.artworkInfo }}</p>
-          </div>
-        </div>
-        <!-- Artist Information Box -->
+       
         <div class="col-12 col-md-6 mb-4">
           <div class="info-box">
             <h4>작가 정보</h4>
-            <p>{{ post.artistInfo }}</p>
+            <p>{{ user_name }}</p>
           </div>
         </div>
-        <!-- Price Information Box -->
-        <div class="col-12 mb-4">
-          <div class="info-box full-width">
+        <div class="col-12 col-md-6 mb-4">
+          <div class="info-box">
+            <h4>작품 정보</h4>
+            <p>{{ market_contents }}</p>
+          </div>
+        </div>
+ 
+       
+              <div class="col-12 mb-4">
+      
             <h4>가격 정보</h4>
-            <p>{{ post.priceInfo }}</p>
+            <h6>최초가격</h6>
+            <div class="info-box full-width"></div>
+            <p>{{market_price}}</p>
+            <h6>바로구매가격</h6>
+            <div class="info-box full-width"></div>
+            <p>{{market_maxprice}}</p>
           </div>
         </div>
 
@@ -80,85 +86,83 @@
         <div class="col-12 mb-4 other-works-section">
           <h4>작가의 판매중인 다른 작품</h4>
           <div class="row">
-            <div class="col-12 col-md-6 col-lg-3 mb-4" v-for="work in otherWorks" :key="work.id">
+            <div class="col-12 col-md-6 col-lg-3 mb-4" v-for="user in user" :key="user.user_id">
               <div class="hover-card">
-                <a :href="work.link" class="text-decoration-none">
-                  <img :src="work.coverImg" class="img-fluid" />
+                <a :href="user.link" class="text-decoration-none">
+                  <img :src="user_imgs" class="img-fluid" />
                   <div class="work-info">
-                    <h5>{{ work.title }}</h5>
-                    <p>{{ work.price }}</p>
-                    <p>{{ work.author }}</p>
+                    <h5>{{ market_title }}</h5>
+                    <p>{{ market_price }}</p>
+                    <p>{{ user_name }}</p>
                   </div>
                 </a>
               </div>
             </div>
           </div>
         </div>
-
       </div>
     </div>
-  </div>
 </template>
 
 <script>
 export default {
   data() {
     return {
-      posts: [
+      market: [
         {
-          id: 1,
-          title: 'Post Title 1',
-          coverImg: 'https://via.placeholder.com/300',
-          category: 'Category 1',
-          link: '#'
+          market_id: 1,
+          market_title: 'Post Title 1',
+          market_imgs: 'https://via.placeholder.com/300',
+          market_category: 'Category 1',
+          market_link: '#'
         },
         {
-          id: 2,
-          title: 'Post Title 2',
-          coverImg: 'https://via.placeholder.com/300',
-          category: 'Category 2',
-          link: '#'
+          market_id: 2,
+          market_title: 'Post Title 2',
+          market_imgs: 'https://via.placeholder.com/300',
+          market_category: 'Category 2',
+          market_link: '#'
         },
         {
-          id: 3,
-          title: 'Post Title 3',
-          coverImg: 'https://via.placeholder.com/300',
-          category: 'Category 3',
-          link: '#'
+          market_id: 3,
+          market_title: 'Post Title 3',
+          market_imgs: 'https://via.placeholder.com/300',
+          market_category: 'Category 3',
+          market_link: '#'
         }
       ],
       otherWorks: [
         {
-          id: 4,
-          title: '작품 1',
-          coverImg: 'https://via.placeholder.com/300',
-          price: '₩1,000,000',
-          author: '홍길동',
-          link: '#'
+          market_id: 4,
+          market_title: '작품 1',
+          market_imgs: 'https://via.placeholder.com/300',
+          market_price: '₩1,000,000',
+          user_name: '홍길동',
+          market_link: '#'
         },
         {
-          id: 5,
-          title: '작품 2',
-          coverImg: 'https://via.placeholder.com/300',
-          price: '₩2,000,000',
-          author: '홍길동',
-          link: '#'
+          market_id: 5,
+          market_title: '작품 2',
+          market_coverImg: 'https://via.placeholder.com/300',
+          market_price: '₩2,000,000',
+          user_name: '홍길동',
+          market_link: '#'
         },
         {
-          id: 6,
-          title: '작품 3',
-          coverImg: 'https://via.placeholder.com/300',
-          price: '₩3,000,000',
-          author: '홍길동',
-          link: '#'
+          market_id: 6,
+          market_title: '작품 3',
+          market_coverImg: 'https://via.placeholder.com/300',
+          market_price: '₩3,000,000',
+          market_author: '홍길동',
+          market_link: '#'
         },
         {
-          id: 7,
-          title: '작품 4',
-          coverImg: 'https://via.placeholder.com/300',
-          price: '₩4,000,000',
-          author: '홍길동',
-          link: '#'
+          market_id: 7,
+          market_title: '작품 4',
+          market_coverImg: 'https://via.placeholder.com/300',
+          market_price: '₩4,000,000',
+          user_name: '홍길동',
+          market_link: '#'
         }
       ],
       endTime: new Date(new Date().getTime() + 10 * 60000), // 현재 시간으로부터 10분 후
@@ -211,7 +215,7 @@ export default {
     }
   },
   beforeUnmount() {
-    if (this.timer) {
+    if (this.timer) {   
       clearInterval(this.timer);
     }
   }

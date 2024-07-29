@@ -17,10 +17,11 @@ import Section from "@/components/mypage/flux_mypage_section.vue";
 <style scoped>
 .section {
   width: 100%;
+  margin-top: 40px;
 }
 .section-align {
+  height: 90%;
   display: flex;
   flex-direction: row;
-  height: 100%;
 }
 </style>

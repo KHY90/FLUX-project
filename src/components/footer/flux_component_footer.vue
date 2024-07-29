@@ -1,45 +1,35 @@
 <template>
-  <footer class="footer bg-dark text-light">
+  <footer class="footer text-light py-3 bg-body-tertiary">
     <div class="container-fluid px-0">
       <div class="row no-gutters">
         <div class="col-md-1 text-center">
           <div class="text-uppercase1">FLUX</div>
           <div class="social-icons">
-            <a href="https://github.com/Flux2024" class="text-light">
-              <img
-                src="/src/assets/image/github.svg"
-                alt="github"
-                class="social-icon"
-              />
-            </a>
+            <a href="https://github.com/Flux2024" class="text-light"></a>
+            <img src="/src/assets/image/github.svg" alt="github" class="social-icon" />
           </div>
         </div>
         <div class="col-md-2 text-center other-content">
           <h5 class="text-uppercase">이용안내</h5>
           <ul class="list-unstyled">
-            <li>
-              <a href="#" class="text-light no-underline">아티스트센터</a>
-            </li>
+            <li><a href="#" class="text-light no-underline">아티스트센터</a></li>
             <li><a href="#" class="text-light no-underline">리셀문의</a></li>
           </ul>
         </div>
         <div class="col-md-2 text-center other-content">
-          <h5 class="text-uppercase">이용안내</h5>
+          <h5 class="text-uppercase">고객센터</h5>
           <ul class="list-unstyled">
-            <li><a href="#" class="text-light no-underline">공지사항</a></li>
-            <li>
-              <a href="#" class="text-light no-underline">자주묻는질문</a>
-            </li>
-            <li><a href="#" class="text-light no-underline">뉴스룸</a></li>
-            <li><a href="#" class="text-light no-underline">마케팅문의</a></li>
+            <li><div class="text-light no-underline" @click="aboutFlux">About FLUX</div></li>
+            <li><router-link to="/notice" class="text-light no-underline">공지사항</router-link></li>
+            <li><a href="#" class="text-light no-underline">자주묻는질문</a></li>
           </ul>
         </div>
         <div class="col-md-2 text-left other-content">
           <h5 class="text-uppercase">고객센터 운영 안내</h5>
           <p class="text-light">
-            운영시간 09:00 ~ 18:00(공휴일 휴무)<br>
-            점심시간 평일 13:20~14:20<br>
-            1:1 채팅 상담은 FLUX카카오채널에서 운영됩니다.<br>
+            운영시간 09:00 ~ 18:00(공휴일 휴무)<br />
+            점심시간 평일 13:20~14:20<br />
+            1:1 채팅 상담은 FLUX카카오채널에서 운영됩니다.<br />
           </p>
           <button class="chat-button">1:1 채팅상담</button>
         </div>
@@ -53,10 +43,24 @@
   </footer>
 </template>
 
-<script>
-export default {
-  name: "Footer",
-};
+<script setup>
+import Swal from 'sweetalert2';
+
+function aboutFlux() {
+  Swal.fire({
+    title: `기여자 : 강형석, 김화연,<br/> 주순태, 목진희`,
+    width: 600,
+    padding: '3em',
+    color: '#716add',
+    background: '#fff url(/images/trees.png)',
+    backdrop: `
+      rgba(0,0,123,0.4)
+      url("https://steamuserimages-a.akamaihd.net/ugc/2055373930157017253/8363DAB489ECF4B57F27F7272969DEC8E0C4C920/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false")
+      left top
+      no-repeat
+    `
+  });
+}
 </script>
 
 <style scoped>
@@ -65,20 +69,11 @@ export default {
   color: #febe98;
   width: 100%;
   padding: 0;
-  margin: 0;
+  margin-top: 50px;
 }
 
-.footer .container-fluid {
-  padding: 0;
-  margin: 0;
-}
 .row {
   justify-content: space-evenly !important;
-}
-
-.footer .row.no-gutters {
-  margin: 0;
-  padding: 0;
 }
 
 .footer .col-md-2,
@@ -108,30 +103,30 @@ export default {
 }
 
 .text-uppercase1 {
-  font-family: "PuradakGentleGothicR";
+  font-family: 'PuradakGentleGothicR';
   color: #febe98;
   font-size: 36px;
   margin: 0.5rem 0;
 }
 
 .text-uppercase {
-  font-family: "LINESeedKR-Bd";
+  font-family: 'LINESeedKR-Bd';
   font-size: 18px;
   color: #fd8e4c;
 }
 
 .text-light {
-  font-family: "LINESeedKR-Bd";
+  font-family: 'LINESeedKR-Bd';
   font-size: 14px;
 }
 
 .list-unstyled {
-  font-family: "LINESeedKR-Bd";
+  font-family: 'LINESeedKR-Bd';
   font-size: 14px;
 }
 
 .mb-0 {
-  font-family: "LINESeedKR-Bd";
+  font-family: 'LINESeedKR-Bd';
   font-size: 12px;
   color: #999;
 }
@@ -153,7 +148,8 @@ export default {
   cursor: pointer;
   border-radius: 8px; /* 모서리 둥글게 */
 }
-@media (max-width: 767.98px) {
+
+@media (max-width: 992px) {
   .footer .other-content {
     display: none;
   }

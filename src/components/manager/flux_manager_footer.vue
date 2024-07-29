@@ -1,5 +1,5 @@
 <template>
-    <footer class="footer text-light">
+    <footer class="footer text-light py-3 bg-body-tertiary">
         <div class="row w-100">
             <div class="col-12 text-center">
                 <p class="mb-0">© 2024 FLUX. All rights reserved.</p>
@@ -17,7 +17,6 @@
   <style scoped>
   .footer {
     background-color: #189AED !important;
-    height: 30px;
     width: 100%;
     padding: 0;
     margin: 0;

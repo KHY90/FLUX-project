@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import axios from "axios";
 
 // 네비게이션 경로 설정관련 로직
 export const useMarketStore = defineStore("useMarketStore", {
@@ -45,7 +46,7 @@ export const useMypageStore = defineStore("useMypageStore", {
   },
 });
 
-export const useManager= defineStore("useManager", {
+export const useManager = defineStore("useManager", {
   state: () => ({
     root: "main",
   }),
@@ -53,7 +54,7 @@ export const useManager= defineStore("useManager", {
     setRoot(option) {
       this.root = option;
     },
-  }
+  },
 });
 
 export const useManagerArticle = defineStore("useManagerArticle", {
@@ -63,30 +64,42 @@ export const useManagerArticle = defineStore("useManagerArticle", {
   actions: {
     setRoot(option) {
       this.root = option;
-    }
-  }
+    },
+  },
 });
-
 
 export const useManagerUser = defineStore("useManagerUser", {
   state: () => ({
     root: "userlist", // 초기값 설정
-
   }),
   actions: {
     setRoot(option) {
       this.root = option;
-    }
-  }
+    },
+  },
 });
 export const useManagerNotice = defineStore("useManagerNotice", {
   state: () => ({
-    root: "noticelist", 
-    }),
+    root: "noticelist",
+  }),
   actions: {
     setRoot(option) {
       this.root = option;
-    }
-  }
+    },
+  },
+});
 
+export const useNotiStore = defineStore("useNotiStore", {
+  state: () => ({
+    root: "main",
+    notifications: [], // 공지사항 목록 추가
+  }),
+  actions: {
+    setRoot(option) {
+      this.root = option;
+    },
+    setNotifications(notifications) {
+      this.notifications = notifications;
+    },
+  },
 });

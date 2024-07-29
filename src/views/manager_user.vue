@@ -21,10 +21,10 @@ import Section from "@/components/manager/flux_manager_user_section.vue";
 <style scoped>
 .section {
   width: 100%;
+  height: 90dvh;
 }
 .section-align {
   display: flex;
   flex-direction: row;
-  height: 100%;
 }
 </style>

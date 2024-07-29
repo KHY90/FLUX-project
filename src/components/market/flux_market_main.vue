@@ -4,23 +4,24 @@
     <div class="container">
       <div class="row">
         <!-- Adjust the number of columns to fit 3 images per row -->
-        <div class="col-12 col-sm-4 mb-4" v-for="post in posts" :key="post.id">
+        <div class="col-12 col-sm-4 mb-4" v-for="market in market" :key="market.market_id">
           <div class="hover-card overflow-hidden lh-10 rounded-md position-relative">
-            <a :href="post.link" class="text-decoration-none">
+            <a :href="`/market/detail/${market.market_id}`" class="text-decoration-none" @click.prevent="goToDetail(market.market_id)">
               <img
-                :src="post.coverImg"
-                :alt="post.title"
+                :src="market.market_imgs"
+                :alt="market.market_title"
                 class="zoom-in img-fluid"
                 style="height: 300px; object-fit: cover; width: 100%;"
-                @click.prevent="goToDetail(post.id)"
               />
             </a>
           </div>
           <div class="mt-3">
             <h5 class="font-weight-bold text-dark">
-              <a :href="post.link" class="text-decoration-none text-dark">{{ post.title }}</a>
+              <a :href="`/market/detail/${market.market_id}`" class="text-decoration-none text-dark" @click.prevent="goToDetail(market.market_id)">
+                {{ market.market_title }}
+              </a>
             </h5>
-            <p class="text-muted">{{ post.category }}</p>
+            <p class="text-muted">{{ market.market_category }}</p>
           </div>
         </div>
       </div>
@@ -47,81 +48,29 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
-      // Example posts data
-      posts: [
-        {
-          id: 1,
-          title: "Post Title 1",
-          coverImg: "https://via.placeholder.com/300",
-          category: "Category 1",
-          link: "#",
-        },
-        {
-          id: 2,
-          title: "Post Title 2",
-          coverImg: "https://via.placeholder.com/300",
-          category: "Category 2",
-          link: "#",
-        },
-        {
-          id: 3,
-          title: "Post Title 3",
-          coverImg: "https://via.placeholder.com/300",
-          category: "Category 3",
-          link: "#",
-        },
-        {
-          id: 4,
-          title: "Post Title 4",
-          coverImg: "https://via.placeholder.com/300",
-          category: "Category 1",
-          link: "#",
-        },
-        {
-          id: 5,
-          title: "Post Title 5",
-          coverImg: "https://via.placeholder.com/300",
-          category: "Category 2",
-          link: "#",
-        },
-        {
-          id: 6,
-          title: "Post Title 6",
-          coverImg: "https://via.placeholder.com/300",
-          category: "Category 3",
-          link: "#",
-        },
-        {
-          id: 7,
-          title: "Post Title 7",
-          coverImg: "https://via.placeholder.com/300",
-          category: "Category 1",
-          link: "#",
-        },
-        {
-          id: 8,
-          title: "Post Title 8",
-          coverImg: "https://via.placeholder.com/300",
-          category: "Category 2",
-          link: "#",
-        },
-        {
-          id: 9,
-          title: "Post Title 9",
-          coverImg: "https://via.placeholder.com/300",
-          category: "Category 3",
-          link: "#",
-        },
-      ],
+      market: [],
     };
   },
   methods: {
-    goToDetail(id) {
-      this.$router.push({ path: '/detail', query: { id: id } });
+    async fetchMarkets() {
+      try {
+        const response = await axios.get('http://localhost:3000/market');
+        this.market = response.data;
+      } catch (error) {
+        console.error('Error fetching markets:', error);
+      }
     },
+    goToDetail(id) {
+      this.$router.push({ path: `/market/detail`, query: { market_id: id } });
+    },
+  },
+  mounted() {
+    this.fetchMarkets();
   },
 };
 </script>

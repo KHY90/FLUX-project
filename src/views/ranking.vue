@@ -12,6 +12,5 @@ import Ranking from "@/components/rank/flux_rank_main.vue";
 .section-align {
   display: flex;
   flex-direction: row;
-  height: 100%;
 }
 </style>

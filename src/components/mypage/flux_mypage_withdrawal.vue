@@ -74,6 +74,7 @@ export default {
 
 <style scoped>
 .flux_mypage_withdrawal {
+    height: 100%;
     max-width: 400px;
     margin: 0 auto;
     text-align: center;

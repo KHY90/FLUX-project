@@ -19,6 +19,5 @@ import Section from "@/components/market/flux_market_sales_section.vue";
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
 }
 </style>

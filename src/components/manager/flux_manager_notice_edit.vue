@@ -41,25 +41,59 @@
         </div>
     </div>
 </template>
-
 <script>
+import axios from 'axios';
+
 export default {
     data() {
         return {
-            title: '',  // 공지 제목 데이터
-            content: '' // 공지 내용 데이터
+            title: '',  
+            content: '',
+            notices: [] // 공지 목록을 저장할 배열
         };
     },
     methods: {
-        submitNotice() {
-            // 공지 등록 로직을 여기에 추가합니다.
-            console.log('제목:', this.title);
-            console.log('내용:', this.content);
+        fetchNotices() {
+            return axios.get('http://localhost:8001/notification')
+                .then(response => {
+                    this.notices = response.data;
+                })
+                .catch(error => {
+                    console.error('공지 목록을 가져오는데 실패했습니다:', error);
+                });
+        },
+        getNextNotiId() {
+            if (this.notices.length === 0) return 1;
+            const maxId = Math.max(...this.notices.map(notice => parseInt(notice.noti_id)));
+            return maxId + 1;
+        },
+        async submitNotice() {
+            await this.fetchNotices(); // 공지 목록을 먼저 가져옵니다.
+            const currentDate = new Date().toISOString(); // 현재 날짜와 시간을 ISO 형식으로 가져오기
+            const notice = {
+                noti_id: String(this.getNextNotiId()), // noti_id를 문자열로 변환하여 저장
+                user_id: 1, // user_id를 1로 고정
+                noti_title: this.title,
+                noti_contents: this.content,
+                noti_createat: currentDate, // 작성 날짜
+                noti_updateat: currentDate  // 수정 날짜
+            };
+
+            axios.post('http://localhost:8001/notification', notice)
+                .then(response => {
+                    console.log('공지 등록 성공:', response.data);
+                    this.title = ''; // 제목 필드를 초기화합니다.
+                    this.content = ''; // 내용 필드를 초기화합니다.
+                    // 공지 등록 성공 후 공지 목록 페이지로 리다이렉트
+                    this.$router.push('/manager/notice/noticelist');
+                })
+                .catch(error => {
+                    console.error('공지 등록 실패:', error);
+                });
         },
         cancel() {
-            // 입력 필드 초기화 및 취소 로직
-            this.title = '';
-            this.content = '';
+            // 이전 페이지로 이동
+            this.$router.go(-1);
         }
     }
 };
