@@ -1,0 +1,15 @@
+{
+  "name": "flux_json_server",
+  "version": "1.0.0",
+  "description": "> 테스트용 json 서버입니다 :p",
+  "main": "index.js",
+  "scripts": {
+    "start": "json-server --watch db.json --port 8001"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "json-server": "^1.0.0-beta.1"
+  }
+}
