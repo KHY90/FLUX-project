@@ -1,0 +1,22 @@
+/* 전체 스크롤바 */
+::-webkit-scrollbar {
+    width: 8px; /* 스크롤바의 너비 */
+    height: 1px; /* 수평 스크롤바의 높이 */
+  }
+  
+  /* 스크롤바 트랙 */
+  ::-webkit-scrollbar-track {
+    background: #000; /* 트랙의 배경색 */
+  }
+  
+  /* 스크롤바 썸(thumb) */
+  ::-webkit-scrollbar-thumb {
+    background: #FEBE98; /* 썸의 배경색 */
+    border-radius: 10px; /* 둥근 모서리 */
+  }
+  
+  /* 스크롤바 썸을 호버했을 때 */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #FD8E4C; /* 호버했을 때 썸의 배경색 */
+  }
+  
