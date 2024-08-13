@@ -5,7 +5,9 @@
         <div class="col-md-6 login-image">
           <img :src="randomImage" alt="Login Image" class="img-fluid" />
         </div>
-        <div class="col-md-6 login-form d-flex flex-column justify-content-center align-items-center">
+        <div
+          class="col-md-6 login-form d-flex flex-column justify-content-center align-items-center"
+        >
           <div class="login-title mb-5">FLUX | LOGIN</div>
           <div class="login-text">
             FLUX는 시장의 유동성과 역동적인 본질을 담아내며 디지털 상거래의
@@ -17,18 +19,16 @@
             "FLUX"라는 이름은 지속적인 움직임과 변화를 의미하며
           </div>
           <div class="login-text mb-5">
-            경매 경험을 혁신하고 변화에 신속히 대응하는 우리의 의지를 반영합니다.
+            경매 경험을 혁신하고 변화에 신속히 대응하는 우리의 의지를
+            반영합니다.
           </div>
-          <a :href="googleLoginUrl" class="mb-3 btn-google">
-            <img src="@/assets/image/google.png" alt="Google Login"/>
-          </a>
+          <!-- <a :href="googleLoginUrl" class="mb-3 btn-google">
+            <img src="@/assets/image/google.png" alt="Google Login" />
+          </a> -->
           <div id="naver_id_login"></div>
           <div class="login-button mt-3">
             <button type="button" class="btn btn-light">
               <router-link to="/" class="no-underline">홈으로</router-link>
-            </button>
-            <button type="button" class="btn btn-light">
-              <router-link to="/manager" class="no-underline">관리자페이지</router-link>
             </button>
           </div>
           <div class="login-right text-center mt-5">
@@ -41,18 +41,19 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted } from "vue";
 
-const googleLoginUrl = 'https://accounts.google.com/o/oauth2/v2/auth?scope=email&response_type=code&client_id=1009714069325-ktbie6b6ipt0m71dkdgv21gnqsnk11l4.apps.googleusercontent.com&redirect_uri=http://localhost:8000/login/oauth2/code/google';
+const googleLoginUrl =
+  "https://accounts.google.com/o/oauth2/v2/auth?scope=email&response_type=code&client_id=1009714069325-ktbie6b6ipt0m71dkdgv21gnqsnk11l4.apps.googleusercontent.com&redirect_uri=http://localhost:8000/login/oauth2/code/google";
 const images = [
-  '/src/assets/image/loginpage/login01.webp',
-  '/src/assets/image/loginpage/login02.webp',
-  '/src/assets/image/loginpage/login03.webp',
-  '/src/assets/image/loginpage/login04.webp',
-  '/src/assets/image/loginpage/login05.webp',
-  '/src/assets/image/loginpage/login06.webp',
+  "/src/assets/image/loginpage/login01.webp",
+  "/src/assets/image/loginpage/login02.webp",
+  "/src/assets/image/loginpage/login03.webp",
+  "/src/assets/image/loginpage/login04.webp",
+  "/src/assets/image/loginpage/login05.webp",
+  "/src/assets/image/loginpage/login06.webp",
 ];
-const randomImage = ref('');
+const randomImage = ref("");
 
 const getRandomImage = () => {
   const randomIndex = Math.floor(Math.random() * images.length);
@@ -61,9 +62,12 @@ const getRandomImage = () => {
 
 onMounted(() => {
   randomImage.value = getRandomImage();
-  const naver_id_login = new window.naver_id_login('teR1JDcGa4Dv2AAhrfpv', 'http://localhost:8000/login/oauth2/code/naver');
+  const naver_id_login = new window.naver_id_login(
+    "teR1JDcGa4Dv2AAhrfpv",
+    "http://localhost:8000/login/oauth2/code/naver"
+  );
   const state = naver_id_login.getUniqState();
-  naver_id_login.setButton('white', 2, 40); // 버튼 설정
+  naver_id_login.setButton("white", 2, 40); // 버튼 설정
   naver_id_login.setState(state);
   naver_id_login.init_naver_id_login();
 });

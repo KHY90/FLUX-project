@@ -33,7 +33,7 @@
           type="button">
           수정
         </router-link>
-        <button @click="deleteArticle" class="btn btn-outline-danger" type="button">삭제</button>
+        <button @click="confirmDelete" class="btn btn-outline-danger" type="button">삭제</button>
       </div>
     </div>
   </div>
@@ -44,7 +44,6 @@ import { ref, onMounted } from 'vue'; // Vue 3의 ref와 onMounted 훅을 임포
 import { useRoute, useRouter } from 'vue-router'; // Vue Router의 useRoute와 useRouter를 임포트
 import axios from 'axios'; // Axios를 임포트하여 API 호출
 
-// Composition API 사용
 const route = useRoute(); // 현재 라우트 정보 가져오기
 const router = useRouter(); // 라우터 인스턴스 가져오기
 const articleId = ref(route.query.id); // URL 쿼리에서 기사 ID를 ref로 저장
@@ -60,13 +59,23 @@ const fetchArticle = async () => {
   }
 };
 
+// 기사 삭제 확인 함수
+const confirmDelete = () => {
+  const isConfirmed = confirm("정말 삭제하시겠습니까?");
+  if (isConfirmed) {
+    deleteArticle();
+  }
+};
+
 // 기사 삭제 함수
 const deleteArticle = async () => {
   try {
     await axios.delete(`http://localhost:8080/api/v1/articles/${articleId.value}`);
+    alert("삭제되었습니다."); // 성공 메시지 표시
     router.push('/manager/article/articlelist'); // 삭제 후 기사 목록으로 이동
   } catch (error) {
     console.error('Error deleting article:', error); // 에러 처리
+    alert("삭제에 실패했습니다."); // 실패 메시지 표시
   }
 };
 

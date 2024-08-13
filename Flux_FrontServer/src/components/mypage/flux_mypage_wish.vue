@@ -1,181 +1,222 @@
 <template>
     <div class="flux_mypage_activity">
-        <h2>위시리스트</h2>
-        <ul class="list-group">
-            <li class="list-group-item d-flex justify-content-between align-items-center" v-for="item in wishItems" :key="item.id">
-                    <div class="item-info d-flex align-items-center">
-                        <img :src="item.imgSrc" alt="상품 이미지" class="product-image">
-                        <div class="item-details">
-                            <h4>{{ item.title }}</h4>
-                            <p>출시년도: {{ item.year }}</p>
-                            <p>작품크기: {{ item.size }}</p>
-                            <p>작품재료: {{ item.material }}</p>
-                        </div>
-                    </div>
-                    <span class="heart-icon">❤️</span>
-                </li>
-        </ul>
+      <h2>위시리스트</h2>
+      <ul class="list-group">
+        <li 
+          class="list-group-item d-flex justify-content-between align-items-center" 
+          v-for="wish in wishItems" 
+          :key="wish.wishId"
+        >
+          <div class="item-info d-flex align-items-center">
+            <img 
+              :src="getImageSrc(wish)" 
+              alt="상품 이미지" 
+              class="product-image"
+            >
+            <div class="item-details">
+              <h4>{{ wish.market.marketName || '상품명 없음' }}</h4>
+            </div>
+          </div>
+          <div class="item-actions">
+            <span class="heart-icon" 
+                  :class="{'text-danger': isWished(wish.market.marketId)}"
+                  @click="toggleWish(wish.market.marketId)"
+            >
+              ❤️
+            </span>
+            <button @click="removeWish(wish.wishId)" class="btn btn-danger">삭제</button>
+          </div>
+        </li>
+      </ul>
     </div>
-</template>
-
-<script>
-export default {
-    name: 'flux_mypage_wish',
-    data() {
-        return {
-            wishItems: [
-                // 예시 데이터
-                { id: 1, imgSrc: '/src/assets/image/img1.png', title: 'Fruit Shop 1', year: '2022', size: '25 x 25 cm', material: '과일과 단색의 수채, 백화점' },
-                { id: 2, imgSrc: '/src/assets/image/img1.png', title: 'Fruit Shop 2', year: '2022', size: '25 x 25 cm', material: '과일과 단색의 수채, 백화점' },
-                { id: 3, imgSrc: '/src/assets/image/img1.png', title: 'Fruit Shop 3', year: '2022', size: '25 x 25 cm', material: '과일과 단색의 수채, 백화점' },
-                { id: 4, imgSrc: '/src/assets/image/img1.png', title: 'Fruit Shop 4', year: '2022', size: '25 x 25 cm', material: '과일과 단색의 수채, 백화점' },
-                { id: 5, imgSrc: '/src/assets/image/img1.png', title: 'Fruit Shop 5', year: '2022', size: '25 x 25 cm', material: '과일과 단색의 수채, 백화점' },
-                { id: 6, imgSrc: '/src/assets/image/img1.png', title: 'Fruit Shop 6', year: '2022', size: '25 x 25 cm', material: '과일과 단색의 수채, 백화점' }
-            ],
-
+  </template>
+  
+  <script setup>
+  import { ref, onMounted } from 'vue';
+  import axios from 'axios';
+  import { useAuthStore } from '@/stores/auth';
+  import { useWishStore } from '@/stores/wish';
+  
+  const authStore = useAuthStore();
+  const wishStore = useWishStore();
+  const wishItems = ref([]);
+  
+  // Fetch the list of wish items
+  const fetchWishItems = async () => {
+    try {
+      const token = authStore.token;
+      const userId = authStore.userId;
+  
+      if (!token || !userId) {
+        console.error('No JWT token or userId found');
+        return;
+      }
+  
+      const response = await axios.get('http://localhost:8080/api/v1/wish/user', {
+        params: { userId },
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+  
+      if (response.status === 200) {
+        wishItems.value = response.data;
+      } else {
+        console.error('Unexpected response status:', response.status, response.data);
+      }
+    } catch (error) {
+      console.error('Error fetching wish items:', error.message);
     }
-}
-}
-</script>
-
-<style scoped>
-.flux_mypage_activity {
+  };
+  
+  // Get image source for wishlist item
+  const getImageSrc = (wish) => {
+    if (wish.market && wish.market.marketImgs && wish.market.marketImgs.length > 0) {
+      return wish.market.marketImgs[0];
+    }
+    return 'default-image.jpg';
+  };
+  
+  // Remove an item from the wishlist
+  const removeWish = async (wishId) => {
+    try {
+      const token = authStore.token;
+  
+      if (!token) {
+        console.error('No JWT token found');
+        return;
+      }
+  
+      const response = await axios.delete(`http://localhost:8080/api/v1/wish/${wishId}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+  
+      if (response.status === 200) {
+        wishItems.value = wishItems.value.filter(wish => wish.wishId !== wishId);
+        wishStore.removeWish(wishId); // Sync with the store
+      } else {
+        console.error('Unexpected response status:', response.status, response.data);
+      }
+    } catch (error) {
+      console.error('Error removing wish item:', error.message);
+    }
+  };
+  
+  // Check if a market is wished
+  const isWished = (marketId) => {
+    return wishStore.isWished(marketId);
+  };
+  
+  // Toggle wish status and sync with the server
+  const toggleWish = async (marketId) => {
+    const token = authStore.token;
+    if (!token) {
+      console.error('No JWT token found');
+      return;
+    }
+  
+    try {
+      if (isWished(marketId)) {
+        await axios.delete('http://localhost:8080/api/v1/wish', {
+          headers: { 'Authorization': `Bearer ${token}` },
+          data: { marketId, userId: authStore.userId }
+        });
+        wishStore.removeWish(marketId); // Sync with the store
+      } else {
+        await axios.post('http://localhost:8080/api/v1/wish', {
+          marketId,
+          userId: authStore.userId
+        }, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        wishStore.addWish(marketId); // Sync with the store
+      }
+    } catch (error) {
+      console.error('Error toggling wish status:', error);
+    }
+  };
+  
+  // On component mount
+  onMounted(() => {
+    fetchWishItems();
+  });
+  </script>
+  
+  
+  <style scoped>
+  .item-actions {
+    display: flex;
+    align-items: center;
+  }
+  
+  .item-actions .btn {
+    margin-right: 15px;
+  }
+  
+  .flux_mypage_activity {
     padding: 20px;
     background-color: #ffffff;
     color: #333;
     border-radius: 10px;
     font-family: 'LINESeedKR-Bd';
-}
-
-.flux_mypage_activity h2 {
+  }
+  
+  .flux_mypage_activity h2 {
     font-size: 50px;
     margin-bottom: 20px;
     color: #000000;
     padding: 10px;
     border-radius: 5px;
-}
-
-.activity-section {
-    margin-bottom: 40px;
-    padding-left: 50px;
-}
-
-.activity-section h3 {
-    font-size: 20px;
-    margin-bottom: 10px;
-    cursor: pointer;
-    color: #ffffff;
-    background-color: #FEBE98;
-    padding: 10px;
-    border-radius: 5px;
-    display: inline-block; /* 텍스트 길이에 맞추기 위해 추가 */
-}
-
-.list-group {
+  }
+  
+  .list-group {
     max-height: 470px; /* 스크롤을 위해 최대 높이 설정 */
     overflow-y: auto;
     padding: 0;
     margin: 0;
     list-style: none;
-}
-
-.list-group-item {
+  }
+  
+  .list-group-item {
     background-color: #ffffff;
     border: 1px solid #ddd;
     border-radius: 8px;
     margin-bottom: 15px;
     padding: 15px;
     transition: background-color 0.3s;
-}
-
-.list-group-item:hover {
+  }
+  
+  .list-group-item:hover {
     background-color: #FFE9DD;
-}
-
-.item-info {
+  }
+  
+  .item-info {
     display: flex;
     align-items: center;
     flex-wrap: wrap; /* 반응형으로 변경 */
-}
-
-.product-image {
+  }
+  
+  .product-image {
     width: 100px; /* 이미지 크기 키움 */
     height: 100px;
     border-radius: 5px;
     margin-right: 15px;
     border: 2px solid #FD8E4C;
-}
-
-.item-details h4 {
+  }
+  
+  .item-details h4 {
     margin: 0;
     font-size: 24px; /* 텍스트 크기 키움 */
     color: #FD8E4C;
-}
-
-.item-details p {
-    margin: 5px 0;
-    font-size: 14px;
-    color: #666;
-}
-
-.heart-icon {
+  }
+  
+  .heart-icon {
     font-size: 50px;
     color: #FD8E4C;
     padding-right: 30px;
-}
-
-.action-buttons {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap; /* 반응형으로 변경 */
-}
-
-.edit-button, .delete-button {
-    padding: 5px 10px;
-    font-size: 14px;
-    border: none;
-    border-radius: 5px;
     cursor: pointer;
-    transition: transform 0.1s ease, background-color 0.3s, color 0.3s;
-    flex: 1 1 auto; /* 반응형으로 변경 */
-    min-width: 50px; /* 최소 너비 설정 */
-}
-
-.edit-button {
-    background-color: #6c757d;
-    color: white;
-}
-
-.delete-button {
-    background-color: #dc3545;
-    color: white;
-}
-
-.edit-button:hover {
-    background-color: #5a6268;
-}
-
-.delete-button:hover {
-    background-color: #c82333;
-}
-
-.edit-button:active, .delete-button:active {
-    transform: scale(0.95);
-}
-
-@media (max-width: 600px) {
-    .item-info {
-        flex-direction: column; /* 작은 화면에서 세로로 정렬 */
-        align-items: flex-start;
-    }
-
-    .action-buttons {
-        flex-direction: column; /* 작은 화면에서 세로로 정렬 */
-        width: 15%; /* 버튼들이 전체 너비 차지 */
-    }
-
-    .edit-button, .delete-button {
-        width: 15%; /* 버튼들이 전체 너비 차지 */
-    }
-}
-</style>
+  }
+  
+  .text-danger {
+    color: red;
+  }
+  </style>
+  

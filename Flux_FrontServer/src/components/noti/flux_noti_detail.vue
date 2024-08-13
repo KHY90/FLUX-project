@@ -2,20 +2,30 @@
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import axios from "axios";
-import { useNotiStore } from "@/stores/rootstore";
+import { useNoticeStore } from "@/stores/notice.js";
 
-const store = useNotiStore();
+const store = useNoticeStore();
 const route = useRoute();
 const router = useRouter();
 const notification = ref(null);
 const errorMessage = ref("");
+const loading = ref(true); // 로딩 상태 추가
 
+if (!store.notifications) {
+  store.notifications = [];
+}
+
+// Fetch notification details
 // Fetch notification details
 const fetchNotification = async () => {
   try {
     const noticeId = parseInt(route.params.id);
-    const notice = store.notifications.find(n => n.noticeId === noticeId);
-    
+
+    // store.notifications가 정의되어 있는지 확인
+    const notice = store.notifications && Array.isArray(store.notifications)
+      ? store.notifications.find(n => n.noticeId === noticeId)
+      : null;
+
     if (notice) {
       notification.value = notice;
     } else {
@@ -29,6 +39,8 @@ const fetchNotification = async () => {
       errorMessage.value = "공지사항을 가져오는 중 오류가 발생했습니다.";
     }
     console.error("Error fetching notification:", error);
+  } finally {
+    loading.value = false; // 데이터 로딩이 완료되면 로딩 상태를 false로 설정
   }
 };
 
@@ -41,33 +53,38 @@ onMounted(fetchNotification);
 </script>
 
 <template>
-  <div v-if="notification" class="noti-con">
-    <div class="noti-title">공지사항</div>
-    <div class="noti-card">
-      <div class="noti-header">{{ notification.noticeTitle }}</div>
-      <hr />
-      <div class="noti-body">{{ notification.noticeContents }}</div>
-      <div class="noti-footer">
-        <div>
-          작성일: {{ new Date(notification.noticeCreateAt).toLocaleString() }}
+  <div v-if="loading" class="loading-message">
+    로딩 중입니다...
+  </div>
+  <div v-else>
+    <div v-if="notification" class="noti-con">
+      <div class="noti-title">공지사항</div>
+      <div class="noti-card">
+        <div class="noti-header">{{ notification.noticeTitle }}</div>
+        <hr />
+        <div class="noti-body">{{ notification.noticeContents }}</div>
+        <div class="noti-footer">
+          <div>
+            작성일: {{ new Date(notification.noticeCreateAt).toLocaleString() }}
+          </div>
+          <div>
+            수정일: {{ new Date(notification.noticeUpdateAt).toLocaleString() }}
+          </div>
         </div>
-        <div>
-          수정일: {{ new Date(notification.noticeUpdateAt).toLocaleString() }}
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+          <button class="btn btn-primary" type="button" @click="goToList">
+            목록으로
+          </button>
         </div>
       </div>
+    </div>
+    <div v-else class="error-message">
+      {{ errorMessage }}
       <div class="d-grid gap-2 d-md-flex justify-content-md-end">
         <button class="btn btn-primary" type="button" @click="goToList">
           목록으로
         </button>
       </div>
-    </div>
-  </div>
-  <div v-else class="error-message">
-    {{ errorMessage }}
-    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-      <button class="btn btn-primary" type="button" @click="goToList">
-        목록으로
-      </button>
     </div>
   </div>
 </template>
@@ -138,5 +155,15 @@ hr {
   padding: 20px;
   color: red;
   font-family: "LINESeedKR-Bd";
+}
+
+.loading-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  font-family: "LINESeedKR-Bd";
+  font-size: 18px;
+  color: #555;
 }
 </style>

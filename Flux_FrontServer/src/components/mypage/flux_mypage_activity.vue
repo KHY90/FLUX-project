@@ -2,37 +2,20 @@
     <div class="flux_mypage_activity">
         <h2>활동내역</h2>
         <div class="activity-section">
-            <h3>입찰내역</h3>
-            <ul class="list-group">
-                <li class="list-group-item d-flex justify-content-between align-items-center" v-for="item in bidItems" :key="item.id">
-                    <div class="item-info d-flex align-items-center">
-                        <img :src="item.imgSrc" alt="상품 이미지" class="product-image">
-                        <div class="item-details">
-                            <h4>{{ item.title }}</h4>
-                            <p>출시년도: {{ item.year }}</p>
-                            <p>작품크기: {{ item.size }}</p>
-                            <p>작품재료: {{ item.material }}</p>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-        </div>
-        <div class="activity-section">
             <h3>판매내역</h3>
             <ul class="list-group">
-                <li class="list-group-item d-flex justify-content-between align-items-center" v-for="item in saleItems" :key="item.id">
-                    <div class="item-info d-flex align-items-center">
-                        <img :src="item.imgSrc" alt="상품 이미지" class="product-image">
+                <li v-for="sale in saleItems" :key="sale.marketId" class="list-group-item d-flex justify-content-between align-items-center">
+                    <div class="item-info d-flex align-items-center" @click="navigateToDetail(sale.marketId)">
+                        <img v-if="sale.marketImgs && sale.marketImgs.length > 0"
+                            :src="sale.marketImgs[0]" alt="상품 이미지" class="product-image">
                         <div class="item-details">
-                            <h4>{{ item.title }}</h4>
-                            <p>출시년도: {{ item.year }}</p>
-                            <p>작품크기: {{ item.size }}</p>
-                            <p>작품재료: {{ item.material }}</p>
+                            <h4 v-if="sale.marketName">{{ sale.marketName }}</h4>
+                            <p v-else>상품 정보 없음</p>
                         </div>
                     </div>
                     <div class="action-buttons">
                         <button class="edit-button">수정</button>
-                        <button class="delete-button">삭제</button>
+                        <button class="delete-button" @click.stop="deleteSale(sale.marketId)">삭제</button>
                     </div>
                 </li>
             </ul>
@@ -40,33 +23,88 @@
     </div>
 </template>
 
-<script>
-export default {
-    name: 'flux_mypage_activity',
-    data() {
-        return {
-            bidItems: [
-                // 예시 데이터
-                { id: 1, imgSrc: '/src/assets/image/img1.png', title: 'Fruit Shop 1', year: '2022', size: '25 x 25 cm', material: '과일과 단색의 수채, 백화점' },
-                { id: 2, imgSrc: '/src/assets/image/img1.png', title: 'Fruit Shop 2', year: '2022', size: '25 x 25 cm', material: '과일과 단색의 수채, 백화점' },
-                { id: 3, imgSrc: '/src/assets/image/img1.png', title: 'Fruit Shop 3', year: '2022', size: '25 x 25 cm', material: '과일과 단색의 수채, 백화점' },
-                { id: 4, imgSrc: '/src/assets/image/img1.png', title: 'Fruit Shop 4', year: '2022', size: '25 x 25 cm', material: '과일과 단색의 수채, 백화점' },
-                { id: 5, imgSrc: '/src/assets/image/img1.png', title: 'Fruit Shop 5', year: '2022', size: '25 x 25 cm', material: '과일과 단색의 수채, 백화점' },
-                { id: 6, imgSrc: '/src/assets/image/img1.png', title: 'Fruit Shop 6', year: '2022', size: '25 x 25 cm', material: '과일과 단색의 수채, 백화점' }
-            ],
-            saleItems: [
-                // 예시 데이터
-                { id: 1, imgSrc: '/src/assets/image/img2.png', title: 'Fruit Shop 1', year: '2022', size: '25 x 25 cm', material: '과일과 단색의 수채, 백화점' },
-                { id: 2, imgSrc: '/src/assets/image/img2.png', title: 'Fruit Shop 2', year: '2022', size: '25 x 25 cm', material: '과일과 단색의 수채, 백화점' },
-                { id: 3, imgSrc: '/src/assets/image/img2.png', title: 'Fruit Shop 3', year: '2022', size: '25 x 25 cm', material: '과일과 단색의 수채, 백화점' },
-                { id: 4, imgSrc: '/src/assets/image/img2.png', title: 'Fruit Shop 4', year: '2022', size: '25 x 25 cm', material: '과일과 단색의 수채, 백화점' },
-                { id: 5, imgSrc: '/src/assets/image/img2.png', title: 'Fruit Shop 5', year: '2022', size: '25 x 25 cm', material: '과일과 단색의 수채, 백화점' },
-                { id: 6, imgSrc: '/src/assets/image/img2.png', title: 'Fruit Shop 6', year: '2022', size: '25 x 25 cm', material: '과일과 단색의 수채, 백화점' }
-            ]
+
+<script setup>
+import axios from 'axios';
+import { ref, computed, onMounted } from 'vue';
+import { useAuthStore } from '@/stores/auth';
+import { useRouter } from 'vue-router';
+
+const router = useRouter(); // Vue Router 인스턴스 가져오기
+const authStore = useAuthStore();
+const userId = computed(() => authStore.userId);
+const saleItems = ref([]);
+
+const isValidUserId = (id) => {
+    return id && id.trim() !== '';
+};
+
+const fetchSale = async (userId) => {
+    if (!isValidUserId(userId)) {
+        console.error('유저 ID가 유효하지 않습니다.');
+        return;
+    }
+
+    try {
+        const response = await axios.get(`http://localhost:8080/api/v1/market/user/${userId}/sales`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authStore.token}`
+            }
+        });
+        console.log('API 응답:', response.data);
+
+        if (Array.isArray(response.data)) {
+            saleItems.value = response.data.map(saleItem => ({
+                ...saleItem,
+                marketImgs: saleItem.marketImgs.map(img => `http://localhost:8080${img}`)
+            }));
+        } else {
+            console.error('예상하지 못한 데이터 형식:', response.data);
+            saleItems.value = [];
+        }
+    } catch (error) {
+        console.error('판매 내역을 가져오는 데 실패했습니다:', error);
+        saleItems.value = [];
+    }
+};
+
+// 삭제 메서드 추가
+const deleteSale = async (marketId) => {
+    try {
+        await axios.delete(`http://localhost:8080/api/v1/market/${marketId}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authStore.token}`
+            }
+        });
+
+        saleItems.value = saleItems.value.filter(sale => sale.marketId !== marketId);
+    } catch (error) {
+        if (error.response && error.response.status === 403) {
+            alert('이 상품은 현재 삭제할 수 없습니다.');
+        } else {
+            console.error('항목 삭제에 실패했습니다:', error);
         }
     }
-}
+};
+
+// 상세 페이지로 이동하는 메서드
+const navigateToDetail = (marketId) => {
+    router.push({ name: 'MarketDetail', params: { marketId } });
+};
+
+onMounted(() => {
+    if (isValidUserId(userId.value)) {
+        fetchSale(userId.value);
+    } else {
+        console.error('User ID is not defined or invalid');
+        alert('Unable to retrieve user data. Please try again later.');
+    }
+});
 </script>
+
+
 
 <style scoped>
 .flux_mypage_activity {
@@ -98,11 +136,13 @@ export default {
     background-color: #FEBE98;
     padding: 10px;
     border-radius: 5px;
-    display: inline-block; /* 텍스트 길이에 맞추기 위해 추가 */
+    display: inline-block;
+    /* 텍스트 길이에 맞추기 위해 추가 */
 }
 
 .list-group {
-    max-height: 470px; /* 스크롤을 위해 최대 높이 설정 */
+    max-height: 470px;
+    /* 스크롤을 위해 최대 높이 설정 */
     overflow-y: auto;
     padding: 0;
     margin: 0;
@@ -125,11 +165,13 @@ export default {
 .item-info {
     display: flex;
     align-items: center;
-    flex-wrap: wrap; /* 반응형으로 변경 */
+    flex-wrap: wrap;
+    /* 반응형으로 변경 */
 }
 
 .product-image {
-    width: 100px; /* 이미지 크기 키움 */
+    width: 100px;
+    /* 이미지 크기 키움 */
     height: 100px;
     border-radius: 5px;
     margin-right: 15px;
@@ -138,7 +180,8 @@ export default {
 
 .item-details h4 {
     margin: 0;
-    font-size: 24px; /* 텍스트 크기 키움 */
+    font-size: 24px;
+    /* 텍스트 크기 키움 */
     color: #FD8E4C;
 }
 
@@ -156,18 +199,22 @@ export default {
 .action-buttons {
     display: flex;
     gap: 10px;
-    flex-wrap: wrap; /* 반응형으로 변경 */
+    flex-wrap: wrap;
+    /* 반응형으로 변경 */
 }
 
-.edit-button, .delete-button {
+.edit-button,
+.delete-button {
     padding: 5px 10px;
     font-size: 14px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     transition: transform 0.1s ease, background-color 0.3s, color 0.3s;
-    flex: 1 1 auto; /* 반응형으로 변경 */
-    min-width: 50px; /* 최소 너비 설정 */
+    flex: 1 1 auto;
+    /* 반응형으로 변경 */
+    min-width: 50px;
+    /* 최소 너비 설정 */
 }
 
 .edit-button {
@@ -188,23 +235,29 @@ export default {
     background-color: #c82333;
 }
 
-.edit-button:active, .delete-button:active {
+.edit-button:active,
+.delete-button:active {
     transform: scale(0.95);
 }
 
 @media (max-width: 600px) {
     .item-info {
-        flex-direction: column; /* 작은 화면에서 세로로 정렬 */
+        flex-direction: column;
+        /* 작은 화면에서 세로로 정렬 */
         align-items: flex-start;
     }
 
     .action-buttons {
-        flex-direction: column; /* 작은 화면에서 세로로 정렬 */
-        width: 15%; /* 버튼들이 전체 너비 차지 */
+        flex-direction: column;
+        /* 작은 화면에서 세로로 정렬 */
+        width: 15%;
+        /* 버튼들이 전체 너비 차지 */
     }
 
-    .edit-button, .delete-button {
-        width: 15%; /* 버튼들이 전체 너비 차지 */
+    .edit-button,
+    .delete-button {
+        width: 15%;
+        /* 버튼들이 전체 너비 차지 */
     }
 }
 </style>

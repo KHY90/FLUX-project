@@ -5,8 +5,8 @@
         <div class="col-md-1 text-center">
           <div class="text-uppercase1">FLUX</div>
           <div class="social-icons">
-            <a href="https://github.com/Flux2024" class="text-light"></a>
-            <img src="/src/assets/image/github.svg" alt="github" class="social-icon" />
+            <a href="https://github.com/Flux2024" class="text-light cursor-pointer"></a>
+            <img src="/src/assets/image/github.svg" alt="github" class="social-icon cursor-pointer" />
           </div>
         </div>
         <div class="col-md-2 text-center other-content">
@@ -19,7 +19,7 @@
         <div class="col-md-2 text-center other-content">
           <h5 class="text-uppercase">고객센터</h5>
           <ul class="list-unstyled">
-            <li><div class="text-light no-underline" @click="aboutFlux">About FLUX</div></li>
+            <li><div class="text-light no-underline cursor-pointer" @click="aboutFlux">About FLUX</div></li>
             <li><router-link to="/notice" class="text-light no-underline">공지사항</router-link></li>
             <li><a href="#" class="text-light no-underline">자주묻는질문</a></li>
           </ul>
@@ -148,6 +148,10 @@ function aboutFlux() {
   cursor: pointer;
   border-radius: 8px; /* 모서리 둥글게 */
 }
+
+.cursor-pointer {
+    cursor: pointer;
+  }
 
 @media (max-width: 992px) {
   .footer .other-content {

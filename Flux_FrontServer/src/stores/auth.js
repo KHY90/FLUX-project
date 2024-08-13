@@ -15,7 +15,8 @@ export const useAuthStore = defineStore('auth', {
       token: localStorage.getItem('authToken') || '',
       user: user,
       username: user ? user.name : '',
-      userId: user ? user.userId : '' // Ensure this aligns with user object
+      userId: user ? user.userId : '', // Ensure this aligns with user object
+      role: user ? user.role : '', // role 정보를 추가
     };
   },
   actions: {
@@ -29,14 +30,16 @@ export const useAuthStore = defineStore('auth', {
       }
       this.user = user;
       this.username = user.name;
-      this.userId = user.userId; // Make sure the property name is userId
+      this.userId = user.userId; 
+      this.role = user.role; // role 정보 설정
       localStorage.setItem('authUser', JSON.stringify(user));
     },
     clearAuth() {
       this.token = '';
       this.user = null;
       this.username = '';
-      this.userId = ''; // id 초기화
+      this.userId = ''; 
+      this.role = ''; // role 초기화
       localStorage.removeItem('authToken');
       localStorage.removeItem('authUser');
     },
@@ -72,7 +75,8 @@ export const useAuthStore = defineStore('auth', {
           this.setUser({
             email: response.data.email,
             provider: 'google',
-            userId: response.data.id // Ensure this is set
+            userId: response.data.id, 
+            role: response.data.role, // role 정보를 설정
           });
         }
       } catch (error) {
@@ -84,6 +88,7 @@ export const useAuthStore = defineStore('auth', {
   getters: {
     isAuthenticated: (state) => !!state.token,
     getUserId: (state) => state.userId,
+    getUserRole: (state) => state.role, // role getter 추가
   },
   persist: true,
 });

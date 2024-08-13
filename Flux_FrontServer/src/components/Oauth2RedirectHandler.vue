@@ -35,6 +35,7 @@ onMounted(async () => {
           userId: response.data.userId,
           email: response.data.email,
           name: response.data.name,
+          role: response.data.role, // role 정보 저장
           provider: 'google'
         });
         currentUrl.searchParams.delete("code");
@@ -46,19 +47,20 @@ onMounted(async () => {
         router.push('/login');
       }
     } else if (naverAccessToken) {
-      console.log("Naver login attempt with token:", naverAccessToken);
+      // console.log("Naver login attempt with token:", naverAccessToken);
       const response = await axios.post('http://localhost:8080/api/oauth/naver', {}, {
         headers: {
           'Authorization': `Bearer ${naverAccessToken}`
         }
       });
-      console.log("Naver login response:", response.data);
+      console.log("Naver login response:", '로그인 성공');
       if (response.data.status === 'success') {
         authStore.setToken(response.data.jwtToken);
         authStore.setUser({
           userId: response.data.userId,
           email: response.data.email,
           name: response.data.name,
+          role: response.data.role, // role 정보 저장
           provider: 'naver'
         });
         currentUrl.searchParams.delete("code");

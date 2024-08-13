@@ -29,6 +29,7 @@
             로그아웃
           </button>
           <router-link
+            v-if="isAdmin"
             to="/manager"
             class="list-group-item list-group-item-action bg-dark pl-4 sidebar-text"
           >
@@ -43,11 +44,14 @@
 <script setup>
 import { useMypageStore } from "@/stores/rootstore";
 import { useAuthStore } from "@/stores/auth";
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
 const store = useMypageStore();
 const authStore = useAuthStore();
 const isLoggingOut = ref(false);
+
+// 사용자 role이 ADMIN인지 확인하는 computed property
+const isAdmin = computed(() => authStore.user?.role === 'ADMIN');
 
 const setRoot = (option) => {
   store.setRoot(option);

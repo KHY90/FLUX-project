@@ -21,16 +21,16 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(user) in filteredUsers" :key="user.user_id">
-            <td>{{ user.user_id }}</td>
+          <tr v-for="(user, index) in filteredUsers" :key="user.userId">
+            <td>{{ user.userId }}</td>
             <td>
-              <select v-model="user.user_role" class="form-select">
+              <select v-model="user.role" class="form-select">
                 <option value="USER">회원</option>
                 <option value="ADMIN">관리자</option>
               </select>
             </td>
-            <td>{{ user.user_name }}</td>
-            <td>{{ user.user_mail }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
           </tr>
         </tbody>
       </table>
@@ -41,55 +41,45 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
 
-export default {
-  name: 'ManagerAdminList',
-  data() {
-    return {
-      users: [],
-      selectedRole: null // 필터링할 역할을 저장
-    }
-  },
-  computed: {
-    filteredUsers() {
-      if (this.selectedRole === null) {
-        return this.users;
-      }
-      return this.users.filter(user => user.user_role === this.selectedRole);
-    }
-  },
-  methods: {
-    filterRole(role) {
-      this.selectedRole = role;
-    },
-    fetchUsers() {
-      axios.get('/user')  // 프록시 설정으로 인해 localhost:8080/user로 요청됨
-        .then(response => {
-          this.users = response.data;
-        })
-        .catch(error => {
-          console.error('회원 목록을 가져오는 중 오류가 발생했습니다!', error);
-        });
-    },
-    submitChanges() {
-      console.log('변경된 내용:', this.users);
-      this.users.forEach(user => {
-        axios.put(`/users/${user.user_id}`, user)  // 프록시 설정으로 인해 localhost:8080/users/{user_id}로 요청됨
-          .then(response => {
-            console.log(`사용자 ${user.user_id} 업데이트 성공:`, response.data);
-          })
-          .catch(error => {
-            console.error(`사용자 ${user.user_id} 업데이트 실패:`, error);
-          });
-      });
-    }
-  },
-  mounted() {
-    this.fetchUsers();
+const users = ref([]);
+const selectedRole = ref(null);
+
+const fetchUsers = async () => {
+  try {
+    const response = await axios.get('http://localhost:8080/api/v1/user');
+    users.value = response.data;
+  } catch (error) {
+    console.error('회원 목록을 가져오는 중 오류가 발생했습니다!', error);
   }
-}
+};
+
+const submitChanges = async () => {
+  try {
+    for (const user of users.value) {
+      await axios.put(`http://localhost:8080/api/v1/user/${user.userId}`, user);
+      console.log(`사용자 ${user.userId} 업데이트 성공`);
+    }
+  } catch (error) {
+    console.error('사용자 업데이트 실패:', error);
+  }
+};
+
+const filterRole = (role) => {
+  selectedRole.value = role;
+};
+
+const filteredUsers = computed(() => {
+  if (selectedRole.value === null) {
+    return users.value;
+  }
+  return users.value.filter(user => user.role === selectedRole.value);
+});
+
+onMounted(fetchUsers);
 </script>
 
 <style scoped>

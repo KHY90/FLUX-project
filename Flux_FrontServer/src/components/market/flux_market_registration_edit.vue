@@ -12,12 +12,7 @@
           <label for="marketCategory">분류</label>
           <select id="marketCategory" v-model="selectedCategory">
             <option value="" disabled>선택하세요</option>
-            <option value="가죽공예">가죽공예</option>
-            <option value="목공예">목공예</option>
-            <option value="도자기공예">도자기공예</option>
-            <option value="금속공예">금속공예</option>
-            <option value="종이공예">종이공예</option>
-            <option value="기타">기타</option>
+            <option v-for="category in categories" :key="category" :value="category">{{ category }}</option>
           </select>
         </div>
         <div class="input-container">
@@ -31,9 +26,9 @@
         <div class="input-container">
           <label for="marketPrice">최초가격</label>
           <div class="price-container">
-            <input type="number" id="marketPrice" v-model.number="marketPrice" />
+            <input type="number" id="marketPrice" v-model.number="marketPrice" step="1000" min="0"/>
             <label class="price-note">바로구매가격</label>
-            <input type="number" id="marketMaxPrice" v-model.number="marketMaxPrice" class="market-maxprice" />
+            <input type="number" id="marketMaxPrice" v-model.number="marketMaxPrice" class="market-maxprice" step="1000" min="0"/>
           </div>
         </div>
         <div class="input-container">
@@ -65,12 +60,7 @@
           <label for="auctionDuration">경매 기간</label>
           <select id="auctionDuration" v-model="auctionDuration">
             <option value="" disabled>기간을 선택하세요</option>
-            <option value="1">1시간</option>
-            <option value="2">2시간</option>
-            <option value="3">3시간</option>
-            <option value="6">6시간</option>
-            <option value="12">12시간</option>
-            <option value="24">24시간</option>
+            <option v-for="(option, index) in durationOptions" :key="index" :value="option.value">{{ option.label }}</option>
           </select>
         </div>
         <div class="submit-button-container">
@@ -85,10 +75,10 @@
 import { ref } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
-import { useAuthStore } from '@/stores/auth';  // auth store import
+import { useAuthStore } from '@/stores/auth';
 
 const router = useRouter();
-const authStore = useAuthStore();  // auth store 사용
+const authStore = useAuthStore();
 
 const marketTitle = ref('');
 const selectedCategory = ref('');
@@ -101,6 +91,24 @@ const marketImgs = ref([]);
 const auctionStartTime = ref('');
 const auctionDuration = ref('');
 
+const categories = [
+  '가죽공예',
+  '목공예',
+  '도자기공예',
+  '금속공예',
+  '종이공예',
+  '기타'
+];
+
+const durationOptions = [
+  { value: '1', label: '1시간' },
+  { value: '2', label: '2시간' },
+  { value: '3', label: '3시간' },
+  { value: '6', label: '6시간' },
+  { value: '12', label: '12시간' },
+  { value: '24', label: '24시간' }
+];
+
 function handleFileUpload(event) {
   marketImgs.value = Array.from(event.target.files);
 }
@@ -112,6 +120,7 @@ function isFile(image) {
 function createObjectURL(file) {
   return URL.createObjectURL(file);
 }
+
 async function submitForm() {
   if (!marketTitle.value || !selectedCategory.value || !userName.value || !marketContents.value ||
       !marketPrice.value || !marketMaxPrice.value || !userMail.value || !auctionStartTime.value || !auctionDuration.value) {
@@ -140,7 +149,7 @@ async function submitForm() {
   const marketData = {
     marketId: null,
     marketName: marketTitle.value,
-    marketImgs: uploadedImageUrls, // 수정: 배열로 전송
+    marketImgs: uploadedImageUrls,
     marketPrice: marketPrice.value,
     marketMaxPrice: marketMaxPrice.value,
     marketCategory: selectedCategory.value,
@@ -176,9 +185,7 @@ async function submitForm() {
     alert('작품 등록에 실패했습니다. 다시 시도해 주세요.');
   }
 }
-
 </script>
-
 <style scoped>
 .registration_edit {
   display: flex;

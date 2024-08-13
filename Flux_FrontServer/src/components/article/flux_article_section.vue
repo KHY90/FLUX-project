@@ -16,17 +16,20 @@ onMounted(() => {
   if (route.params.id) {
     setRoot(`detail/${route.params.id}`);
   } else {
-    setRoot('main');
+    setRoot("main");
   }
 });
 
-watch(() => route.params.id, (newId) => {
-  if (newId) {
-    setRoot(`detail/${newId}`);
-  } else {
-    setRoot('main');
+watch(
+  () => route.params.id,
+  (newId) => {
+    if (newId) {
+      setRoot(`detail/${newId}`);
+    } else {
+      setRoot("main");
+    }
   }
-});
+);
 </script>
 
 <template>

@@ -41,7 +41,7 @@ public class Market {
     private int marketPrice;
 
     @Column(name = "market_maxprice")
-    private int marketMaxPrice;
+    private Integer marketMaxPrice; // 수정: Integer로 변경하여 null을 허용
 
     @Column(name = "market_category", nullable = false)
     private String marketCategory;
@@ -75,4 +75,12 @@ public class Market {
 
     @Column(name = "market_view", nullable = false)
     private int marketView;
+
+    public void setMarketStatus(MarketStatus marketStatus) {
+        this.marketStatus = marketStatus;
+        if (marketStatus == MarketStatus.SOLD_OUT) {
+            this.marketOrderableStatus = false;
+        }
+    }
+
 }

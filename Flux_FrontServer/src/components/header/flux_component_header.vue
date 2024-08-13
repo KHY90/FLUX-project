@@ -6,9 +6,19 @@ import { addAnimation, removeAnimation } from "@/assets/js/animation.js";
 import { useAuthStore } from "@/stores/auth";
 
 const notifications = ref([]);
+console.log(notifications);
 
 const latestNotification = computed(() => {
-  return notifications.value.length > 0 ? notifications.value[0] : null;
+  if (notifications.value.length === 0) {
+    return null;
+  }
+
+  // 최신 항목을 가져오기 위해 날짜 기준으로 정렬
+  const sortedNotifications = [...notifications.value].sort((a, b) => {
+    return new Date(b.noticeCreateAt) - new Date(a.noticeCreateAt);
+  });
+
+  return sortedNotifications[0]; // 가장 최신 항목 반환
 });
 
 const bannerStore = useBannerStore();
@@ -25,12 +35,20 @@ const formatDate = (dateString) => {
   const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
 };
+
 async function fetchNotifications() {
   try {
-    const response = await axios.get('http://localhost:8080/api/v1/notification');
-    return response.data;
+    const response = await axios.get(
+      "http://localhost:8080/api/v1/notification"
+    );
+
+    // notifications 값을 업데이트
+    notifications.value = response.data;
   } catch (error) {
-    console.error('Error fetching notifications:', error.response ? error.response.data : error.message);
+    console.error(
+      "Error fetching notifications:",
+      error.response ? error.response.data : error.message
+    );
     throw error;
   }
 }
@@ -44,7 +62,7 @@ onMounted(fetchNotifications);
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
         <router-link
-          class="navbar-brand"
+          class="navbar-brand cursor-pointer"
           to="/"
           @mouseover="addAnimation"
           @mouseleave="removeAnimation"
@@ -78,37 +96,31 @@ onMounted(fetchNotifications);
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mb-2 mb-lg-0">
             <li class="nav-item">
-              <router-link class="nav-link" to="/">Home</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link class="nav-link" to="/market">Market</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link class="nav-link" to="/article">Article</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link class="nav-link" to="/ranking">Ranking</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link class="nav-link point-link" to="/sales"
-                >Sales</router-link
+              <router-link class="nav-link cursor-pointer2" to="/"
+                >Home</router-link
               >
             </li>
             <li class="nav-item">
-              <form class="d-flex ms-2 search-form" role="search">
-                <input
-                  class="form-control me-2 custom-search-input"
-                  type="search"
-                  placeholder="검색어를 입력해주세요"
-                  aria-label="Search"
-                />
-                <button
-                  class="btn btn-outline-success custom-search-button"
-                  type="submit"
-                >
-                  Search
-                </button>
-              </form>
+              <router-link class="nav-link cursor-pointer2" to="/market"
+                >Market</router-link
+              >
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link cursor-pointer2" to="/article"
+                >Article</router-link
+              >
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link cursor-pointer2" to="/ranking"
+                >Ranking</router-link
+              >
+            </li>
+            <li class="nav-item">
+              <router-link
+                class="nav-link point-link cursor-pointer2"
+                to="/sales"
+                >Sales</router-link
+              >
             </li>
           </ul>
         </div>
@@ -119,15 +131,19 @@ onMounted(fetchNotifications);
       v-if="bannerStore.isBannerVisible && latestNotification"
     >
       <div class="banner-align">
-        <strong class="banner-contents"
-          >🛠️ 공지사항 : {{ latestNotification.title }} |
+        <router-link
+          v-if="latestNotification && latestNotification.noticeId"
+          :to="`/notice/${latestNotification.noticeId}`"
+          class="banner-contents"
+        >
+          🛠️ 공지사항 : {{ latestNotification.noticeTitle }} |
           {{
             formatDate(
               latestNotification.noticeCreateAt ||
                 latestNotification.noticeUpdateAt
             )
           }}
-        </strong>
+        </router-link>
         <button @click="closeBanner" class="close-btn">X</button>
       </div>
     </div>
@@ -135,6 +151,16 @@ onMounted(fetchNotifications);
 </template>
 
 <style scoped>
+router-link {
+  color: #000;
+  text-decoration: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
 .navbar {
   padding-top: 1em !important;
   padding-bottom: 1em !important;
@@ -255,6 +281,15 @@ onMounted(fetchNotifications);
   font-weight: bold;
   color: #fff;
   cursor: pointer;
+}
+
+.cursor-pointer,
+cursor-pointer2 {
+  cursor: pointer !important;
+}
+.cursor-pointer2:hover {
+  cursor: pointer !important;
+  animation: headShake 1s;
 }
 
 @media (max-width: 992px) {

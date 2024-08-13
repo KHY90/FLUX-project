@@ -10,7 +10,7 @@
         </div>
       </div>
     </div>
-    <div class="table-container">
+    <div class="table-container" v-if="users.length > 0"> <!-- 조건부 렌더링 추가 -->
       <table class="table table-striped table-bordered">
         <thead class="thead-dark">
           <tr>
@@ -21,56 +21,54 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(user) in filteredUsers" :key="user.user_id">
-            <td>{{ user.user_id }}</td>
-            <td>{{ user.user_role }}</td>
-            <td>{{ user.user_name }}</td>
-            <td>{{ user.user_mail }}</td>
+          <tr v-for="(user, index) in filteredUsers" :key="user.userId">
+            <td>{{ user.userId }}</td> <!-- 순번 -->
+            <td>{{ user.role }}</td> <!-- 회원 종류 -->
+            <td>{{ user.username }}</td> <!-- 아이디 -->
+            <td>{{ user.email }}</td> <!-- 이메일 -->
           </tr>
         </tbody>
       </table>
     </div>
+    <div v-else>
+      <p>회원 목록을 불러오는 중입니다...</p> <!-- 데이터 로딩 중일 때 표시할 메시지 -->
+    </div>
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
 
-export default {
-  name: 'MemberList',
-  data() {
-    return {
-      users: [],
-      selectedRole: null // 필터링할 역할을 저장
-    }
-  },
-  computed: {
-    filteredUsers() {
-      if (this.selectedRole === null) {
-        return this.users;
-      }
-      return this.users.filter(user => user.user_role === this.selectedRole);
-    }
-  },
-  methods: {
-    filterRole(role) {
-      this.selectedRole = role;
-    },
-    fetchUsers() {
-      axios.get('http://localhost:8001/user')
-        .then(response => {
-          this.users = response.data;
-        })
-        .catch(error => {
-          console.error('회원 목록을 가져오는 중 오류가 발생했습니다!', error);
-        });
-    }
-  },
-  mounted() {
-    this.fetchUsers();
+const users = ref([]);
+const selectedRole = ref(null);
+
+const filteredUsers = computed(() => {
+  if (selectedRole.value === null) {
+    return users.value;
   }
-}
+  return users.value.filter(user => user.role === selectedRole.value);
+});
+
+const filterRole = (role) => {
+  selectedRole.value = role;
+};
+
+const fetchUsers = async () => {
+  try {
+    const response = await axios.get('http://localhost:8080/api/v1/user');
+    users.value = response.data;
+  } catch (error) {
+    console.error('회원 목록을 가져오는 중 오류가 발생했습니다!', error);
+  }
+};
+
+onMounted(() => {
+  fetchUsers();
+});
 </script>
+
+
 
 <style scoped>
 body {

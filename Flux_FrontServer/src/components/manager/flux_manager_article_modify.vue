@@ -19,7 +19,8 @@
     <div class="subject">
       <p>제목</p>
       <div class="input-group">
-        <input v-model="article.articleTitle" type="text" aria-label="subject" class="form-control" placeholder="제목을 입력해주세요.">
+        <input v-model="article.articleTitle" type="text" aria-label="subject" class="form-control"
+          placeholder="제목을 입력해주세요.">
       </div>
     </div>
     <!-- 제목 입력창 종료 -->
@@ -28,7 +29,8 @@
     <div class="name">
       <p>작가 이름</p>
       <div class="input-group">
-        <input v-model="article.articleAuthor" type="text" aria-label="name" class="form-control" placeholder="작가 이름을 입력해주세요.">
+        <input v-model="article.articleAuthor" type="text" aria-label="name" class="form-control"
+          placeholder="작가 이름을 입력해주세요.">
       </div>
     </div>
     <!-- 작가 이름 입력창 종료 -->
@@ -38,8 +40,10 @@
       <p>이미지 등록</p>
       <div class="form-group">
         <div class="image-upload-container">
-          <input type="file" id="image-upload" class="form-control" aria-label="Upload" accept="image/*" @change="handleImageUpload">
-          <img id="upload-image-preview" :src="article.articleImgPath" alt="이미지 업로드" class="upload-image" @click="triggerFileUpload">
+          <input type="file" id="image-upload" class="form-control" aria-label="Upload" accept="image/*"
+            @change="handleImageUpload">
+          <img id="upload-image-preview" :src="article.articleImgPath" alt="이미지 업로드" class="upload-image"
+            @click="triggerFileUpload">
         </div>
       </div>
     </div>
@@ -48,7 +52,8 @@
     <!-- 내용 등록창 시작 -->
     <p>내용</p>
     <div class="input-group">
-      <textarea v-model="article.articleContents" class="form-control" aria-label="With textarea" placeholder="내용을 작성해 주세요."></textarea>
+      <textarea v-model="article.articleContents" class="form-control" aria-label="With textarea"
+        placeholder="내용을 작성해 주세요."></textarea>
     </div>
     <!-- 내용 등록창 종료 -->
 
@@ -105,6 +110,8 @@ const triggerFileUpload = () => {
 // 아티클 업데이트
 const updateArticle = async () => {
   const formData = new FormData();
+
+  // 아티클 데이터 추가
   formData.append('article', new Blob([JSON.stringify({
     articleTitle: article.value.articleTitle,
     articleAuthor: article.value.articleAuthor,
@@ -112,7 +119,9 @@ const updateArticle = async () => {
     articleCategory: article.value.articleCategory
   })], { type: 'application/json' }));
 
+  // 이미지 파일 추가
   if (article.value.articleImgPath) {
+    // Assuming articleImgPath contains the file data URI
     const blob = dataURItoBlob(article.value.articleImgPath);
     formData.append('files', blob, 'image.jpg'); // 파일의 이름을 지정
   }
@@ -131,6 +140,10 @@ const updateArticle = async () => {
 
 // Data URI를 Blob으로 변환
 const dataURItoBlob = (dataURI) => {
+  if (!dataURI.startsWith('data:')) {
+    throw new Error('Invalid data URI format');
+  }
+
   const byteString = atob(dataURI.split(',')[1]);
   const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
   const ab = new ArrayBuffer(byteString.length);
@@ -213,7 +226,8 @@ onMounted(() => {
 }
 
 #image-upload {
-  display: none; /* 파일 입력 필드를 숨김 */
+  display: none;
+  /* 파일 입력 필드를 숨김 */
 }
 
 .upload-image {
